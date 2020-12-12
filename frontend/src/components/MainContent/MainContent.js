@@ -14,7 +14,6 @@ const Main = styled.main`
 const MainContent = () => {
   return (
     <Main>
-      {/* MainContent */}
       <PostList />
       <Side />
     </Main>

@@ -21,14 +21,15 @@ const GlobalStyle = createGlobalStyle`
   }
 
   a {
+    color: inherit;
     text-decoration: none;
   }
 
-  h1,h2,h3,h4,h5,h6, a, input {
+  h1,h2,h3,h4,h5,h6, a, input, button {
     font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 
-  p {
+  p, textarea {
     font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 `;

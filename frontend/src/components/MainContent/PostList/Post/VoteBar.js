@@ -1,16 +1,19 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import DownvoteIcon from '../../../../icons/DownvoteIcon';
 import UpvoteIcon from '../../../../icons/UpvoteIcon';
 
 const Div = styled.div`
-  height: 80px;
+  height: 100%;
   width: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: absolute;
   left: 0;
+  z-index: 5;
   padding: 8px 4px;
+  background: ${({ theme }) => theme.grayNew};
+  border-radius: 4px 0 0 4px;
 `;
 
 const Dot = styled.div`
@@ -18,20 +21,50 @@ const Dot = styled.div`
 `;
 
 const Icon = styled.div`
-  height: 24px;
-  color: ${({ theme }) => theme.gray2};
+  height: 28px;
+`;
+
+const UpvoteBtn = styled.button`
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+  ${({ theme }) =>
+    css`
+      color: ${theme.gray2};
+      :hover {
+        background: ${theme.gray3};
+        color: #00abe7;
+      }
+    `};
+`;
+const DownvoteBtn = styled.button`
+  background: transparent;
+  border: none;
+  border-radius: 2px;
+  ${({ theme }) =>
+    css`
+      color: ${theme.gray2};
+      :hover {
+        background: ${theme.gray3};
+        color: #eaba6b;
+      }
+    `};
 `;
 
 const VoteBar = () => {
   return (
     <Div>
-      <Icon>
-        <UpvoteIcon />
-      </Icon>
+      <UpvoteBtn>
+        <Icon>
+          <UpvoteIcon />
+        </Icon>
+      </UpvoteBtn>
       <Dot>•</Dot>
-      <Icon>
-        <DownvoteIcon />
-      </Icon>
+      <DownvoteBtn>
+        <Icon>
+          <DownvoteIcon />
+        </Icon>
+      </DownvoteBtn>
     </Div>
   );
 };
