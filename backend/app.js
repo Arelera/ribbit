@@ -21,11 +21,16 @@ app.use('/*', (req, res, next) => {
 });
 
 // error handler
-app.use((err, _req, res, next) => {
-  if (err.message === 'Invalid credentials') {
-    res.status(401).json({ error: err.message });
-  } else {
-    res.status(400).send();
+app.use((err, req, res, next) => {
+  console.log(err);
+  switch (err.message) {
+    case 'Invalid credentials':
+      return res.status(401).json({ error: err.message });
+    case 'Username taken':
+      return res.status(400).send();
+
+    default:
+      return res.status(400).send();
   }
 });
 
