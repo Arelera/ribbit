@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import Button from '../../reusable/Button';
 
@@ -23,6 +22,7 @@ const Textarea = styled.textarea`
 
 const Bottom = styled.div`
   border-radius: 0 0 2px 2px;
+  margin-top: -5px;
   ${({ theme }) =>
     css`
       border: 1px solid ${theme.postBorder};

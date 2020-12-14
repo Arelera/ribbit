@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import CommentIcon from '../../icons/CommentIcon';
 import VoteBar from '../MainContent/PostList/Post/VoteBar';
@@ -5,7 +6,6 @@ import VoteBar from '../MainContent/PostList/Post/VoteBar';
 const Div = styled.div`
   margin: 0 auto;
   width: 100%;
-
   ${({ theme }) =>
     css`
       color: ${theme.gray0};
@@ -18,7 +18,7 @@ const Content = styled.div`
 
 const Post = styled.div`
   margin: 0 0 0 40px;
-  padding: 10px;
+  padding: 10px 8px;
 `;
 
 const Poster = styled.div`
@@ -63,9 +63,13 @@ const PostContent = ({ post }) => {
       <Content>
         <VoteBar post={post} />
         <Post>
-          <Poster>Posted by {post.user}</Poster>
+          <Poster>
+            Posted by <Link to="/">u/{post.user}</Link>
+          </Poster>
           <Title>{post.title}</Title>
-          <P>{post.content}</P>
+          {post.content.split('\n').map((c) => (
+            <P>{c}</P>
+          ))}
           <Bottom>
             <Icon>
               <CommentIcon />

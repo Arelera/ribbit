@@ -52,7 +52,7 @@ const LinkItem = styled.a`
 
 const Icon = styled.div`
   height: 20px;
-  color: ${({ theme }) => theme.sunray};
+  color: ${({ theme }) => theme.sec2};
 `;
 
 const ItemText = styled.span`
@@ -62,7 +62,7 @@ const ItemText = styled.span`
 const NavMenuItems = () => {
   return (
     <Items>
-      <H3>REDDIT FEEDS</H3>
+      <H3>RIBBIT FEEDS</H3>
       {redditFeeds.map((item, i) => (
         <Link to={item.link} component={LinkItem} key={i}>
           <Icon>

@@ -49,8 +49,9 @@ const TextContainer = styled.div`
   mask-image: linear-gradient(180deg, #000 60%, transparent);
 `;
 
-const Text = styled.p`
+const P = styled.p`
   line-height: 21px;
+  padding: 12px 4px 12px 0;
   ${({ theme }) =>
     css`
       color: ${theme.gray0};
@@ -70,7 +71,9 @@ const Post = ({ post }) => {
         </Link>
 
         <TextContainer>
-          <Text>{post.content}</Text>
+          {post.content.split('\n').map((p) => (
+            <P>{p}</P>
+          ))}
         </TextContainer>
         <BottomBar items={bottomBarItems(7)} />
       </Content>

@@ -33,7 +33,7 @@ const UpvoteBtn = styled.button`
       color: ${theme.gray2};
       :hover {
         background: ${theme.gray3};
-        color: #00abe7;
+        color: ${theme.prim1};
       }
     `};
 `;
@@ -46,7 +46,7 @@ const DownvoteBtn = styled.button`
       color: ${theme.gray2};
       :hover {
         background: ${theme.gray3};
-        color: #eaba6b;
+        color: ${theme.sec2};
       }
     `};
 `;

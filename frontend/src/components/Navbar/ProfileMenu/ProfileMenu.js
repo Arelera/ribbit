@@ -56,6 +56,7 @@ const Name = styled.span`
 
 const Karma = styled.span`
   font-family: 'IBM Plex Sans';
+  font-weight: 600;
   ${({ theme }) =>
     css`
       color: ${theme.gray1};
