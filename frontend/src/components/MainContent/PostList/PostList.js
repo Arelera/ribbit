@@ -33,7 +33,7 @@ const posts = [
     ],
   },
   {
-    id: 1,
+    id: 2,
     subreddit: 'webdev',
     user: 'coolGuyye111',
     title:
@@ -51,7 +51,7 @@ const posts = [
     ],
   },
   {
-    id: 1,
+    id: 3,
     subreddit: 'webdev',
     user: 'coolGuyye111',
     title:
@@ -67,7 +67,7 @@ const posts = [
     ],
   },
   {
-    id: 1,
+    id: 4,
     subreddit: 'webdev',
     user: 'coolGuyye111',
     title:

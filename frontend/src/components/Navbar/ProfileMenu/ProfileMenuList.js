@@ -60,18 +60,29 @@ const Icon = styled.div`
   top: 10px;
 `;
 
-const ProfileMenuList = () => {
+const ProfileMenuList = ({ user }) => {
   return (
     <Div>
-      <H3>MY STUFF</H3>
-      {items.map((item, i) => (
-        <Link to={item.link} component={LinkItem} key={i}>
+      {user ? (
+        <>
+          <H3>MY STUFF</H3>
+          {items.map((item, i) => (
+            <Link to={item.link} component={LinkItem} key={i}>
+              <Icon>
+                <item.icon />
+              </Icon>
+              {item.text}
+            </Link>
+          ))}
+        </>
+      ) : (
+        <Link to="/" component={LinkItem}>
           <Icon>
-            <item.icon />
+            <LogoutIcon />
           </Icon>
-          {item.text}
+          Log In / Sign Up
         </Link>
-      ))}
+      )}
     </Div>
   );
 };

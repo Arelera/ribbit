@@ -71,8 +71,8 @@ const Post = ({ post }) => {
         </Link>
 
         <TextContainer>
-          {post.content.split('\n').map((p) => (
-            <P>{p}</P>
+          {post.content.split('\n').map((p, i) => (
+            <P key={i}>{p}</P>
           ))}
         </TextContainer>
         <BottomBar items={bottomBarItems(7)} />

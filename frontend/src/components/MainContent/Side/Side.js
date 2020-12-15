@@ -26,6 +26,9 @@ const TrendTitle = styled.h2`
 
 const Left = styled.div`
   width: 144px;
+  a {
+    font-weight: 600;
+  }
 `;
 
 const Subreddit = styled.div`
@@ -44,7 +47,7 @@ const Subreddit = styled.div`
     `};
 `;
 
-const Members = styled.p`
+const Members = styled.div`
   ${({ theme }) =>
     css`
       font-size: ${theme.fontSmall};
@@ -63,8 +66,8 @@ const Side = () => {
     <Aside>
       <Box>
         <TrendTitle>Trending Communities</TrendTitle>
-        {trends.map((trend) => (
-          <Subreddit>
+        {trends.map((trend, i) => (
+          <Subreddit key={i}>
             <Left>
               <Link to={trend.link}>r/{trend.name}</Link>
               <Members>{trend.members} members</Members>

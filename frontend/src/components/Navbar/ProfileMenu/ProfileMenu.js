@@ -1,7 +1,9 @@
+import { useSelector } from 'react-redux';
 import styled, { css } from 'styled-components';
 import useVisible from '../../../hooks/useVisible';
 import ChevBotIcon from '../../../icons/ChevBotIcon';
 import KarmaIcon from '../../../icons/KarmaIcon';
+import ProfileIcon from '../../../icons/ProfileIcon';
 import ProfileMenuList from './ProfileMenuList';
 
 const Div = styled.div`
@@ -10,7 +12,6 @@ const Div = styled.div`
 
 const Button = styled.button`
   height: 40px;
-  width: 215px;
   background: transparent;
   margin-left: 8px;
   padding: 0 8px;
@@ -41,6 +42,7 @@ const LeftSide = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 177px;
 `;
 
 const Name = styled.span`
@@ -71,26 +73,38 @@ const IconKarma = styled.div`
   color: #2dc7ff;
 `;
 
+const IconProfile = styled.div`
+  height: 24px;
+  color: ${({ theme }) => theme.gray2};
+`;
+
 const ProfileMenu = () => {
+  const user = useSelector((state) => state.user);
   const [expanded, setExpanded, refVisible] = useVisible(false);
 
   return (
     <Div ref={refVisible}>
       <Button expanded={expanded} onClick={() => setExpanded(!expanded)}>
-        <LeftSide>
-          <Name>Bobby</Name>
-          <Karma>
-            <IconKarma>
-              <KarmaIcon />
-            </IconKarma>
-            123 karma
-          </Karma>
-        </LeftSide>
+        {user ? (
+          <LeftSide>
+            <Name>{user.username}</Name>
+            <Karma>
+              <IconKarma>
+                <KarmaIcon />
+              </IconKarma>
+              {user.karma || 0} karma
+            </Karma>
+          </LeftSide>
+        ) : (
+          <IconProfile>
+            <ProfileIcon />
+          </IconProfile>
+        )}
         <ChevBot>
           <ChevBotIcon />
         </ChevBot>
       </Button>
-      {expanded && <ProfileMenuList />}
+      {expanded && <ProfileMenuList user={user} />}
     </Div>
   );
 };

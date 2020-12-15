@@ -6,12 +6,13 @@ const Div = styled.div`
   padding: 0 2px;
   width: 40px;
   flex-shrink: 0;
+  text-align: center;
 `;
 
 const Button = styled.button`
   background: none;
   border: none;
-
+  cursor: pointer;
   border-radius: 4px;
   ${({ theme }) =>
     css`

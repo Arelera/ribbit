@@ -73,22 +73,6 @@ const Sorter = ({ comments, setComments }) => {
   console.log({ query }, { sortBy }, { comments });
   const [expanded, setExpanded, expandedRef] = useVisible(false);
 
-  const sorter = (array) => {
-    switch (sortBy) {
-      case 'bottom':
-        setComments([...array.sort((a, b) => a.upvotes - b.upvotes)]);
-        break;
-      case 'new':
-        setComments([...array.sort((a, b) => a.createdAt - b.createdAt)]);
-        break;
-      case 'old':
-        setComments([...array.sort((a, b) => b.createdAt - a.createdAt)]);
-        break;
-      default:
-        setComments([...array.sort((a, b) => b.upvotes - a.upvotes)]);
-    }
-  };
-
   const sortChangeHandler = (param) => {
     history.push(`?sort=${param.toLowerCase()}`);
     setSortBy(param.toLowerCase());
@@ -96,6 +80,21 @@ const Sorter = ({ comments, setComments }) => {
   };
 
   useEffect(() => {
+    const sorter = (array) => {
+      switch (sortBy) {
+        case 'bottom':
+          setComments([...array.sort((a, b) => a.upvotes - b.upvotes)]);
+          break;
+        case 'new':
+          setComments([...array.sort((a, b) => a.createdAt - b.createdAt)]);
+          break;
+        case 'old':
+          setComments([...array.sort((a, b) => b.createdAt - a.createdAt)]);
+          break;
+        default:
+          setComments([...array.sort((a, b) => b.upvotes - a.upvotes)]);
+      }
+    };
     sorter(comments);
   }, [sortBy, query, setComments]);
 

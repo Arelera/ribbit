@@ -34,8 +34,8 @@ const Icon = styled.a`
 const BottomBar = ({ items }) => {
   return (
     <Bottom>
-      {items.map((item) => (
-        <Item>
+      {items.map((item, i) => (
+        <Item key={i}>
           <Link to="/" component={Icon}>
             <item.icon />
           </Link>

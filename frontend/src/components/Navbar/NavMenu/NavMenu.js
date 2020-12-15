@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import ChevBotIcon from '../../../icons/ChevBotIcon';
 import NavMenuItems from './NavMenuItems';
 import useVisible from '../../../hooks/useVisible';
+import { useSelector } from 'react-redux';
 
 const Div = styled.div`
   position: relative;
@@ -41,6 +42,7 @@ const ChevBot = styled.div`
 `;
 
 const NavMenu = () => {
+  const user = useSelector((state) => state.user);
   const [expanded, setExpanded, refVisible] = useVisible();
 
   return (
@@ -58,10 +60,6 @@ const NavMenu = () => {
       {expanded && <NavMenuItems />}
     </Div>
   );
-};
-
-const user = {
-  username: 'Bobby',
 };
 
 export default NavMenu;

@@ -5,6 +5,8 @@ import NavMenu from './NavMenu/NavMenu';
 import Search from './Search/Search';
 import NavList from './NavList/NavList';
 import ProfileMenu from './ProfileMenu/ProfileMenu';
+import SignLog from './SignLog.js/SignLog';
+import { useSelector } from 'react-redux';
 
 const Nav = styled.nav`
   width: 100%;
@@ -25,15 +27,17 @@ const Nav = styled.nav`
     `}
 `;
 
-const Navbar = () => {
+const Navbar = ({ showUserForm }) => {
+  const user = useSelector((state) => state.user);
+
   return (
     <Nav>
       <Link to="/">
         <Logo />
       </Link>
-      <NavMenu />
+      {user && <NavMenu />}
       <Search />
-      <NavList />
+      {user ? <NavList /> : <SignLog showUserForm={showUserForm} />}
       <ProfileMenu />
     </Nav>
   );
