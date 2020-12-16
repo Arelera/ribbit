@@ -15,12 +15,12 @@ const Container = styled.div`
   background: ${({ theme }) => theme.gray4};
 `;
 
-const PostPage = () => {
+const PostPage = ({ showUserForm }) => {
   return (
     <Div>
       <Container>
         <PostContent post={post} />
-        <Comments />
+        <Comments showUserForm={showUserForm} />
       </Container>
     </Div>
   );

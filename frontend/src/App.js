@@ -1,28 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import MainContent from './components/MainContent/MainContent';
 import Navbar from './components/Navbar/Navbar';
 import PostPage from './components/PostPage/PostPage';
+import SubribbitForm from './components/SubribbitForm/SubribbitForm';
 import UserForm from './components/UserForm/UserForm';
 import useVisible from './hooks/useVisible';
+import { initUser } from './store/actions/user';
 
 const App = () => {
+  const dispatch = useDispatch();
   const [userFormVisible, setUserFormVisible, userFormRef] = useVisible();
   const [userFormType, setUserFormType] = useState('login');
 
   const showUserForm = (type) => {
     if (!type) return setUserFormVisible(false);
-
     setUserFormType(type);
     setUserFormVisible(true);
   };
+
+  useEffect(() => {
+    dispatch(initUser());
+  }, []);
 
   return (
     <Router>
       <Navbar showUserForm={showUserForm} />
       <Switch>
         <Route path="/" exact component={MainContent} />
-        <Route path="/r/:subreddit/:id" exact component={PostPage} />
+        <Route path="/r/:subribbit/:id" exact>
+          <PostPage showUserForm={showUserForm} />
+        </Route>
+        <Route path="/subribbits/create" exact component={SubribbitForm} />
       </Switch>
       {userFormVisible && (
         <UserForm

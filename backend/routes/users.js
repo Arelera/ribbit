@@ -3,14 +3,32 @@ const jwt = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const client = require('../client');
 const { JWT_SECRET } = require('../config');
+const getTokenFrom = require('../helpers/getTokenFrom');
 
-const getTokenFrom = (req) => {
-  const auth = req.get('authorization');
-  if (auth && auth.toLowerCase().startsWith('bearer ')) {
-    return auth.substring(7);
+// refresh token
+router.get('/refresh', async (req, res, next) => {
+  try {
+    const oldToken = getTokenFrom(req);
+    const decodedUser = jwt.verify(oldToken, JWT_SECRET);
+
+    const response = await client.query(
+      `
+      SELECT id, username, email, "joinedSubribbits" FROM users
+      WHERE username = $1;
+      `,
+      [decodedUser.username]
+    );
+    const user = response.rows[0];
+    if (!user) return;
+
+    const newToken = jwt.sign(user, JWT_SECRET);
+    user.token = newToken;
+
+    res.json(user);
+  } catch (error) {
+    next(error);
   }
-  return null;
-};
+});
 
 // sign up
 router.post('/signup', async (req, res, next) => {
@@ -20,7 +38,7 @@ router.post('/signup', async (req, res, next) => {
     // find if username already exists
     const checkResponse = await client.query(
       `
-      SELECT * FROM users
+      SELECT id, username, email, "joinedSubribbits" FROM users
       WHERE username = $1;
     `,
       [username]
@@ -37,7 +55,7 @@ router.post('/signup', async (req, res, next) => {
       `
       INSERT INTO users (username, email, "passwordHash")
       VALUES ($1, $2, $3)
-      RETURNING username, email, "joinedSubribbits", "upvotedPosts", "downvotedPosts", "upvotedComments", "downvotedComments";
+      RETURNING username, email, "joinedSubribbits";
     `,
       [username, email, passwordHash]
     );
@@ -45,10 +63,7 @@ router.post('/signup', async (req, res, next) => {
     const createdUser = response.rows[0];
 
     // create a token with username and send it along with createdUser
-    const token = await jwt.sign(
-      { username: createdUser.username },
-      JWT_SECRET
-    );
+    const token = jwt.sign({ username: createdUser.username }, JWT_SECRET);
     createdUser.token = token;
 
     res.status(201).send(createdUser);
@@ -61,11 +76,11 @@ router.post('/signup', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
   try {
     const { username, password } = req.body;
-
+    console.log({ username, password });
     // check if username exists
     const response = await client.query(
       `
-      SELECT * FROM users
+      SELECT id, "passwordHash", username, email, "joinedSubribbits" FROM users
       WHERE username = $1;
       `,
       [username]
@@ -80,8 +95,12 @@ router.post('/login', async (req, res, next) => {
     if (!isVerified) {
       throw new Error('Invalid credentials');
     }
+    delete user.passwordHash;
 
-    const token = await jwt.sign({ username: user.username }, JWT_SECRET);
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      JWT_SECRET
+    );
     user.token = token;
 
     res.send(user);

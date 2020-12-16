@@ -67,8 +67,8 @@ const PostContent = ({ post }) => {
             Posted by <Link to="/">u/{post.user}</Link>
           </Poster>
           <Title>{post.title}</Title>
-          {post.content.split('\n').map((c) => (
-            <P>{c}</P>
+          {post.content.split('\n').map((c, i) => (
+            <P key={i}>{c}</P>
           ))}
           <Bottom>
             <Icon>

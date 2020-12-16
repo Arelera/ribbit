@@ -70,7 +70,6 @@ const Sorter = ({ comments, setComments }) => {
   const history = useHistory();
   const query = useQuery().get('sort');
   const [sortBy, setSortBy] = useState(query || 'top');
-  console.log({ query }, { sortBy }, { comments });
   const [expanded, setExpanded, expandedRef] = useVisible(false);
 
   const sortChangeHandler = (param) => {

@@ -9,7 +9,8 @@ const Div = styled.div`
   align-items: center;
 `;
 
-const Ribbit = styled.h1`
+const Ribbit = styled.span`
+  font-size: 24px;
   font-family: 'Quicksand';
   color: ${({ theme }) => theme.gray0};
   padding-left: 0.5rem;

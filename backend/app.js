@@ -4,6 +4,7 @@ const path = require('path');
 const app = express();
 
 const usersRouter = require('./routes/users');
+const subribbitsRouter = require('./routes/subribbits');
 
 // middleware
 app.use(cors());
@@ -12,6 +13,7 @@ app.use(express.static('build'));
 
 // routes
 app.use('/api/users', usersRouter);
+app.use('/api/subribbits', subribbitsRouter);
 
 // route catch-all
 app.use('/*', (req, res, next) => {

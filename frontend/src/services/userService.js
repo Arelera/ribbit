@@ -1,6 +1,18 @@
 import axios from 'axios';
 import { baseUrl } from './config';
 
+const initUser = async (token) => {
+  try {
+    const response = await axios.get(`${baseUrl}/users/refresh`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log('INIT ERROR: ', error);
+  }
+};
+
 const loginUser = async (user) => {
   try {
     const response = await axios.post(`${baseUrl}/users/login`, user);
@@ -19,6 +31,6 @@ const signupUser = async (user) => {
   }
 };
 
-const userService = { loginUser, signupUser };
+const userService = { initUser, loginUser, signupUser };
 
 export default userService;

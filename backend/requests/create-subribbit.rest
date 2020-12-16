@@ -1,0 +1,8 @@
+POST http://localhost:3001/api/subribbits
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4MTRhMzgwLTk4ZTEtNGE5ZS1hYmQ1LTZiZjUwMDVjMjFlNCIsInVzZXJuYW1lIjoiZG9nIiwiaWF0IjoxNjA4MTUyMjE1fQ.EKfiWiwusmr7D3PoddsQemg4zcSb5iguiMwEXAD2yZk
+
+{
+  "name": "firstSubRibWAOWW",
+  "description": "Tha first subribbit my dudes"
+}

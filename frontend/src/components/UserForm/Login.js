@@ -19,8 +19,11 @@ const Login = ({ showUserForm }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(loginUser({ username, password }));
-    showUserForm();
+    dispatch(loginUser({ username, password })).then((res) => {
+      if (!res?.error) {
+        showUserForm();
+      }
+    });
   };
 
   return (

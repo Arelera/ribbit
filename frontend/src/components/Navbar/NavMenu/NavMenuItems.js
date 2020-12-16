@@ -34,7 +34,7 @@ const H3 = styled.h3`
     `};
 `;
 
-const LinkItem = styled.a`
+const LinkItem = styled.div`
   padding: 8px 24px;
   height: 36px;
   font-weight: 400;
@@ -64,20 +64,24 @@ const NavMenuItems = () => {
     <Items>
       <H3>RIBBIT FEEDS</H3>
       {redditFeeds.map((item, i) => (
-        <Link to={item.link} component={LinkItem} key={i}>
-          <Icon>
-            <item.icon />
-          </Icon>
-          <ItemText>{item.text}</ItemText>
+        <Link to={item.link} key={i}>
+          <LinkItem>
+            <Icon>
+              <item.icon />
+            </Icon>
+            <ItemText>{item.text}</ItemText>
+          </LinkItem>
         </Link>
       ))}
       <H3>OTHER</H3>
       {other.map((item, i) => (
-        <Link to={item.link} component={LinkItem} key={i}>
-          <Icon>
-            <item.icon />
-          </Icon>
-          <ItemText>{item.text}</ItemText>
+        <Link to={item.link} key={i}>
+          <LinkItem>
+            <Icon>
+              <item.icon />
+            </Icon>
+            <ItemText>{item.text}</ItemText>
+          </LinkItem>
         </Link>
       ))}
     </Items>
@@ -119,7 +123,7 @@ const other = [
     text: 'Messages',
   },
   {
-    link: '/',
+    link: '/subribbits/create',
     icon: CreateIcon,
     text: 'Create Community',
   },

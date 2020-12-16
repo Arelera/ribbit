@@ -1,14 +1,20 @@
 import userService from '../../services/userService';
 
-export const initUser = (user) => {
-  const userJson = localStorage.getItem('user');
-  if (userJson) {
-    const user = JSON.parse(userJson);
-    return {
-      type: 'INIT_USER',
-      user,
-    };
-  }
+export const initUser = () => {
+  return async (dispatch) => {
+    const userJson = localStorage.getItem('user');
+    if (userJson) {
+      const user = JSON.parse(userJson);
+      // const response = await userService.initUser(user.token);
+      localStorage.setItem('user', JSON.stringify(user));
+      // if (response) {
+      dispatch({
+        type: 'INIT_USER',
+        user: user,
+      });
+      // }
+    }
+  };
 };
 
 export const loginUser = (user) => {
@@ -22,6 +28,15 @@ export const loginUser = (user) => {
     dispatch({
       type: 'LOGIN',
       user: response,
+    });
+  };
+};
+
+export const logoutUser = () => {
+  return async (dispatch) => {
+    localStorage.removeItem('user');
+    dispatch({
+      type: 'LOGOUT',
     });
   };
 };

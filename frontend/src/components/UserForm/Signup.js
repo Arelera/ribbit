@@ -23,8 +23,13 @@ const Signup = ({ showUserForm }) => {
     e.preventDefault();
     if (password !== passwordRepeat)
       return dispatch({ type: 'SET_ERROR', error: 'Password mismatch' });
-    dispatch(signupUser({ username, email, password, passwordRepeat }));
-    showUserForm();
+    dispatch(signupUser({ username, email, password, passwordRepeat })).then(
+      (res) => {
+        if (!res?.error) {
+          showUserForm();
+        }
+      }
+    );
   };
 
   return (

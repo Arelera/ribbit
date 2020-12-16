@@ -1,20 +1,17 @@
 import { useState } from 'react';
-import styled from 'styled-components';
 import CommentInput from './CommentInput';
 import CommentList from './CommentList';
 import Sorter from './Sorter';
 
-const Div = styled.div``;
-
-const Comments = () => {
+const Comments = ({ showUserForm }) => {
   const [comments, setComments] = useState(fakeComments);
 
   return (
-    <Div>
-      <CommentInput />
+    <>
+      <CommentInput showUserForm={showUserForm} />
       <Sorter comments={comments} setComments={setComments} />
       <CommentList comments={comments} />
-    </Div>
+    </>
   );
 };
 

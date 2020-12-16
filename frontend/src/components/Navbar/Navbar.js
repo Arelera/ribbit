@@ -38,7 +38,7 @@ const Navbar = ({ showUserForm }) => {
       {user && <NavMenu />}
       <Search />
       {user ? <NavList /> : <SignLog showUserForm={showUserForm} />}
-      <ProfileMenu />
+      <ProfileMenu showUserForm={showUserForm} />
     </Nav>
   );
 };

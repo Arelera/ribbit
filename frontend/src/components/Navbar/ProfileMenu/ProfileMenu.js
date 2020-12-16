@@ -78,7 +78,7 @@ const IconProfile = styled.div`
   color: ${({ theme }) => theme.gray2};
 `;
 
-const ProfileMenu = () => {
+const ProfileMenu = ({ showUserForm }) => {
   const user = useSelector((state) => state.user);
   const [expanded, setExpanded, refVisible] = useVisible(false);
 
@@ -104,7 +104,7 @@ const ProfileMenu = () => {
           <ChevBotIcon />
         </ChevBot>
       </Button>
-      {expanded && <ProfileMenuList user={user} />}
+      {expanded && <ProfileMenuList user={user} showUserForm={showUserForm} />}
     </Div>
   );
 };

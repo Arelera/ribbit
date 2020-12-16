@@ -1,8 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import ProfileIcon from '../../../icons/ProfileIcon';
 import CogIcon from '../../../icons/CogIcon';
 import LogoutIcon from '../../../icons/LogoutIcon';
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../../../store/actions/user';
 
 const Div = styled.div`
   position: absolute;
@@ -28,7 +30,7 @@ const H3 = styled.h3`
     `};
 `;
 
-const LinkItem = styled.a`
+const ListItem = styled.div`
   display: flex;
   padding: 10px 16px 10px 48px;
   position: relative;
@@ -60,28 +62,54 @@ const Icon = styled.div`
   top: 10px;
 `;
 
-const ProfileMenuList = ({ user }) => {
+const ListItemButton = styled.button`
+  background: none;
+  border: none;
+  width: 100%;
+`;
+
+const ProfileMenuList = ({ user, showUserForm }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    history.push('/');
+  };
+
   return (
     <Div>
       {user ? (
         <>
           <H3>MY STUFF</H3>
           {items.map((item, i) => (
-            <Link to={item.link} component={LinkItem} key={i}>
-              <Icon>
-                <item.icon />
-              </Icon>
-              {item.text}
+            <Link to={item.link} key={i}>
+              <ListItem>
+                <Icon>
+                  <item.icon />
+                </Icon>
+                {item.text}
+              </ListItem>
             </Link>
           ))}
+          <ListItemButton onClick={handleLogout}>
+            <ListItem>
+              <Icon>
+                <LogoutIcon />
+              </Icon>
+              Log Out
+            </ListItem>
+          </ListItemButton>
         </>
       ) : (
-        <Link to="/" component={LinkItem}>
-          <Icon>
-            <LogoutIcon />
-          </Icon>
-          Log In / Sign Up
-        </Link>
+        <ListItemButton onClick={() => showUserForm('login')}>
+          <ListItem>
+            <Icon>
+              <LogoutIcon />
+            </Icon>
+            Log In / Sign Up
+          </ListItem>
+        </ListItemButton>
       )}
     </Div>
   );
@@ -96,11 +124,6 @@ const items = [
   {
     text: 'User Settings',
     icon: CogIcon,
-    link: '',
-  },
-  {
-    text: 'Log Out',
-    icon: LogoutIcon,
     link: '',
   },
 ];
