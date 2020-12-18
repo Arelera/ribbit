@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import { formatDistance } from 'date-fns';
 import CommentIcon from '../../../../icons/CommentIcon';
 import Voter from './Voter';
 
@@ -30,8 +31,11 @@ const Points = styled.span`
   color: ${({ theme }) => theme.gray2};
 `;
 
-const Date = styled.span`
+const TimeAgo = styled.span`
   color: ${({ theme }) => theme.gray2};
+`;
+const TimeAgoEdit = styled(TimeAgo)`
+  font-style: italic;
 `;
 
 const Content = styled.div`
@@ -74,18 +78,30 @@ const BottomItem = styled.button`
     `}
 `;
 
-const Comment = ({ comment }) => {
+const Comment = ({ comment, currDate }) => {
   return (
     <Div>
       <Voter />
       <div>
         <Top>
           <Link to="/" component={Poster}>
-            {comment.user}
+            {comment.creator}
           </Link>
           <Points> {comment.upvotes} points</Points>
-          <Date> · {comment.createdAt}</Date>
-          {comment.editedAt && <Date> · edited {comment.editedAt}</Date>}
+          <TimeAgo>
+            {' '}
+            · {formatDistance(new Date(comment.createdAt), currDate)} ago
+          </TimeAgo>
+          {comment.updatedAt && (
+            <TimeAgoEdit>
+              {' '}
+              · edited {formatDistance(
+                new Date(comment.updatedAt),
+                currDate
+              )}{' '}
+              ago
+            </TimeAgoEdit>
+          )}
         </Top>
         <Content>
           {comment.content.split('\n').map((p, i) => (

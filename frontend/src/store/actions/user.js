@@ -5,6 +5,8 @@ export const initUser = () => {
     const userJson = localStorage.getItem('user');
     if (userJson) {
       const user = JSON.parse(userJson);
+      // TODO: remove commented out lines after development is done
+      // trying not to make unnecessary calls here
       // const response = await userService.initUser(user.token);
       localStorage.setItem('user', JSON.stringify(user));
       // if (response) {

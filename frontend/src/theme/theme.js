@@ -6,9 +6,10 @@ const Theme = {
   sec2: '#EABA6B',
 
   postBorder: '#343536',
+
+  white1: '#FCFCFB',
   gray0: '#D7DADC',
   gray1: '#B2ABA1',
-
   gray2: '#818384',
   gray3: '#272729',
   gray4: '#1A1A1B',

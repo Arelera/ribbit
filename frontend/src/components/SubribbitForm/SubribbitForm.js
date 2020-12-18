@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Redirect, useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import subribbitService from '../../services/subribitService';
 import Button from '../reusable/Button';
 
 const Container = styled.div`
@@ -63,7 +66,8 @@ const TextInput = styled.input`
   border-radius: 4px;
   padding: 8px;
   color: inherit;
-  border: 1px solid ${({ theme }) => theme.postBorder};
+  border: 1px solid
+    ${(props) => (props.nameError ? 'red' : props.theme.postBorder)};
 `;
 
 const TextArea = styled.textarea`
@@ -84,14 +88,42 @@ const SubmitBtn = styled(Button)`
   margin-left: auto;
 `;
 
+const Error = styled.span`
+  font-size: ${({ theme }) => theme.fontSmall};
+  color: red;
+`;
+
 const SubribbitForm = () => {
+  const user = useSelector((state) => state.user);
+  const history = useHistory();
   const [name, setName] = useState('');
+  const [nameError, setNameError] = useState('');
   const [description, setDescription] = useState('');
 
   const submitHandler = (e) => {
     e.preventDefault();
+    if (/[^a-z0-9_]+/i.test(name)) {
+      return;
+    }
+    subribbitService.createOne({ name, description }).then((res) => {
+      if (res.error) {
+        return setNameError(res.error);
+      }
+      history.push(`/r/${res.name}`);
+    });
   };
 
+  const nameChangeHandler = (e) => {
+    setName(e.target.value);
+    if (/[^a-z0-9_]+/i.test(e.target.value)) {
+      return setNameError(
+        'Name can only contain letters, numbers and undescores "_".'
+      );
+    }
+    setNameError('');
+  };
+
+  if (!user) return <Redirect to="/" />;
   return (
     <Container>
       <Decor />
@@ -107,9 +139,11 @@ const SubribbitForm = () => {
           <TextInput
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={nameChangeHandler}
+            nameError={nameError}
             required
           />
+          <Error>{nameError}</Error>
         </Label>
         <Label>
           <Title>Description</Title>

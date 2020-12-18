@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import CommentIcon from '../../icons/CommentIcon';
-import VoteBar from '../MainContent/PostList/Post/VoteBar';
+import VoteBar from '../PostList/Post/VoteBar';
+import { formatDistance } from 'date-fns';
 
 const Div = styled.div`
   margin: 0 auto;
@@ -21,7 +22,7 @@ const Post = styled.div`
   padding: 10px 8px;
 `;
 
-const Poster = styled.div`
+const Top = styled.div`
   margin-bottom: 6px;
   ${({ theme }) =>
     css`
@@ -63,9 +64,10 @@ const PostContent = ({ post }) => {
       <Content>
         <VoteBar post={post} />
         <Post>
-          <Poster>
-            Posted by <Link to="/">u/{post.user}</Link>
-          </Poster>
+          <Top>
+            Posted by <Link to={`u/${post.creator}`}>u/{post.creator}</Link>{' '}
+            {formatDistance(new Date(post.createdAt), new Date())} ago
+          </Top>
           <Title>{post.title}</Title>
           {post.content.split('\n').map((c, i) => (
             <P key={i}>{c}</P>

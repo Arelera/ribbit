@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import CommentIcon from '../../../../icons/CommentIcon';
-import EllipsisIcon from '../../../../icons/EllipsisIcon';
+
+import CommentIcon from '../../../icons/CommentIcon';
+import EllipsisIcon from '../../../icons/EllipsisIcon';
 import BottomBar from './BottomBar';
 import TopBar from './TopBar';
 import VoteBar from './VoteBar';
@@ -59,17 +60,15 @@ const P = styled.p`
     `}
 `;
 
-const Post = ({ post }) => {
+const Post = ({ post, currDate }) => {
   return (
     <Div>
       <VoteBar />
       <Content>
-        <TopBar post={post} />
-
-        <Link to={`/r/${post.subreddit}/${post.id}`}>
+        <TopBar post={post} currDate={currDate} />
+        <Link to={`/r/${post.subribbit}/${post.id}`}>
           <Title>{post.title}</Title>
         </Link>
-
         <TextContainer>
           {post.content.split('\n').map((p, i) => (
             <P key={i}>{p}</P>

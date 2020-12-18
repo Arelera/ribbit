@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import PostList from './PostList/PostList';
+import PostList from '../PostList/PostList';
 import Side from './Side/Side';
 
 const Main = styled.main`

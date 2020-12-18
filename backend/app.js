@@ -24,7 +24,7 @@ app.use('/*', (req, res, next) => {
 
 // error handler
 app.use((err, req, res, next) => {
-  console.log(err);
+  console.log(err.message);
   switch (err.message) {
     case 'Invalid credentials':
       return res.status(401).json({ error: err.message });
@@ -32,7 +32,7 @@ app.use((err, req, res, next) => {
       return res.status(400).send();
 
     default:
-      return res.status(400).send();
+      return res.status(400).json({ error: err.message });
   }
 });
 

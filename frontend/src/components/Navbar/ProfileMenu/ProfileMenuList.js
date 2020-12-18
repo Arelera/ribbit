@@ -42,15 +42,6 @@ const ListItem = styled.div`
       :hover {
         background: ${theme.gray3};
       }
-      :last-child::before {
-        content: '';
-        position: absolute;
-        background: ${theme.postBorder};
-        top: 0px;
-        left: 17px;
-        height: 1px;
-        width: 180px;
-      }
     `};
 `;
 
@@ -66,6 +57,16 @@ const ListItemButton = styled.button`
   background: none;
   border: none;
   width: 100%;
+  position: relative;
+  ::before {
+    content: '';
+    position: absolute;
+    background: ${({ theme }) => theme.postBorder};
+    top: 0px;
+    left: 17px;
+    height: 1px;
+    width: 180px;
+  }
 `;
 
 const ProfileMenuList = ({ user, showUserForm }) => {

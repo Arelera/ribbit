@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
-import DownvoteIcon from '../../../../icons/DownvoteIcon';
-import UpvoteIcon from '../../../../icons/UpvoteIcon';
+import DownvoteIcon from '../../../icons/DownvoteIcon';
+import UpvoteIcon from '../../../icons/UpvoteIcon';
 
 const Div = styled.div`
   height: 100%;

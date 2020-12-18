@@ -5,7 +5,6 @@ import Button from '../../reusable/Button';
 const Aside = styled.aside`
   flex-shrink: 0;
   width: 312px;
-  height: 300px;
 `;
 const Box = styled.div`
   border-radius: 4px;
@@ -65,7 +64,7 @@ const Side = () => {
   return (
     <Aside>
       <Box>
-        <TrendTitle>Trending Communities</TrendTitle>
+        <TrendTitle>Top Communities</TrendTitle>
         {trends.map((trend, i) => (
           <Subreddit key={i}>
             <Left>
@@ -95,6 +94,16 @@ const trends = [
     name: 'birds',
     link: '/',
     members: 1489241,
+  },
+  {
+    name: 'Coolstuff',
+    link: '/',
+    members: 4854,
+  },
+  {
+    name: 'woaahhh',
+    link: '/',
+    members: 54871254,
   },
 ];
 

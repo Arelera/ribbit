@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import { formatDistance, subDays } from 'date-fns';
 
 const Top = styled.div`
   margin: 0 8px 8px;
@@ -10,28 +11,28 @@ const Top = styled.div`
     `}
 `;
 
-const Subreddit = styled.a`
+const Subreddit = styled.span`
   color: ${({ theme }) => theme.gray0};
   font-weight: 700;
   margin-right: 3px;
 `;
 
-const Poster = styled.a`
+const Poster = styled.span`
   color: inherit;
   margin-right: 3px;
 `;
 
-const TopBar = ({ post }) => {
+const TopBar = ({ post, currDate }) => {
   return (
     <Top>
-      <Link to="" component={Subreddit}>
-        r/{post.subreddit}
+      <Link to={`/r/${post.subribbit}`}>
+        <Subreddit>r/{post.subribbit}</Subreddit>
       </Link>
       Posted by{' '}
-      <Link to="" component={Poster}>
-        u/{post.user}
+      <Link to="">
+        <Poster>u/{post.user}</Poster>
       </Link>
-      <span>{post.createdAt}</span>
+      <span>{formatDistance(new Date(post.createdAt), currDate)} ago</span>
     </Top>
   );
 };
