@@ -39,7 +39,7 @@ const MembersP = styled.p`
   margin-bottom: 12px;
 `;
 
-const Icon = styled.div`
+const Icon = styled.span`
   display: inline-block;
   height: 16px;
   margin-right: 8px;
@@ -60,7 +60,7 @@ const SubPageAside = ({ info }) => {
         <AsideTitle>About Community</AsideTitle>
         <p>{info.description}</p>
         <div>
-          <Members>{info.members}</Members>
+          <Members>{info.memberCount}</Members>
           <MembersP>
             <span>Members</span>
           </MembersP>

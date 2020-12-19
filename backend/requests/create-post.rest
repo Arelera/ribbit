@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/posts
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4MTRhMzgwLTk4ZTEtNGE5ZS1hYmQ1LTZiZjUwMDVjMjFlNCIsInVzZXJuYW1lIjoiZG9nIiwiaWF0IjoxNjA4NDAyNzgyfQ.ZU-R058ov5ZQHhq11uTdghCNw_tkbuqLsbLZWXu9okI
+
+{
+  "sub": "qwe",
+  "title": "Firsttt titleee",
+  "content": "Get the helll out of my faceee"
+}

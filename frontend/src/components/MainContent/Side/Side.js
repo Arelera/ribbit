@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import subribbitService from '../../../services/subribitService';
 import Button from '../../reusable/Button';
 
 const Aside = styled.aside`
@@ -61,15 +63,23 @@ const JoinButton = styled(Button)`
 `;
 
 const Side = () => {
+  const [topSubribbits, setTopSubribbits] = useState([]);
+
+  useEffect(() => {
+    subribbitService.getTop(5).then((res) => {
+      setTopSubribbits(res);
+    });
+  }, []);
+
   return (
     <Aside>
       <Box>
         <TrendTitle>Top Communities</TrendTitle>
-        {trends.map((trend, i) => (
+        {topSubribbits.map((topSub, i) => (
           <Subreddit key={i}>
             <Left>
-              <Link to={trend.link}>r/{trend.name}</Link>
-              <Members>{trend.members} members</Members>
+              <Link to={`/r/${topSub.name}`}>r/{topSub.name}</Link>
+              <Members>{topSub.memberCount} members</Members>
             </Left>
             <JoinButton>JOIN</JoinButton>
           </Subreddit>
@@ -78,33 +88,5 @@ const Side = () => {
     </Aside>
   );
 };
-
-const trends = [
-  {
-    name: 'dogs',
-    link: '/',
-    members: 235241,
-  },
-  {
-    name: 'cats',
-    link: '/',
-    members: 52341,
-  },
-  {
-    name: 'birds',
-    link: '/',
-    members: 1489241,
-  },
-  {
-    name: 'Coolstuff',
-    link: '/',
-    members: 4854,
-  },
-  {
-    name: 'woaahhh',
-    link: '/',
-    members: 54871254,
-  },
-];
 
 export default Side;

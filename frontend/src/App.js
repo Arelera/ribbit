@@ -32,7 +32,11 @@ const App = () => {
       <Switch>
         <Route path="/" exact component={MainContent} />
         <Route path="/r/:subribbit" exact component={SubribbitPage} />
-        <Route path="/r/:subribbit/submit" exact component={PostForm} />
+        <Route
+          path={['/submit', '/r/:subribbit/submit']}
+          component={PostForm}
+          exact
+        />
         <Route path="/r/:subribbit/:id" exact>
           <PostPage showUserForm={showUserForm} />
         </Route>

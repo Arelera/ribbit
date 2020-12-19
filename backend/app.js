@@ -5,6 +5,7 @@ const app = express();
 
 const usersRouter = require('./routes/users');
 const subribbitsRouter = require('./routes/subribbits');
+const postsRouter = require('./routes/posts');
 
 // middleware
 app.use(cors());
@@ -14,6 +15,7 @@ app.use(express.static('build'));
 // routes
 app.use('/api/users', usersRouter);
 app.use('/api/subribbits', subribbitsRouter);
+app.use('/api/posts', postsRouter);
 
 // route catch-all
 app.use('/*', (req, res, next) => {
@@ -30,7 +32,8 @@ app.use((err, req, res, next) => {
       return res.status(401).json({ error: err.message });
     case 'Username taken':
       return res.status(400).send();
-
+    case 'insert or update on table "posts" violates foreign key constraint "posts_subribbit_fkey"':
+      return res.status(404).json({ error: 'Subribbit not found' });
     default:
       return res.status(400).json({ error: err.message });
   }

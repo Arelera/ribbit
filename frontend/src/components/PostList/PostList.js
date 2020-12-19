@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import useQuery from '../../hooks/useQuery';
+import postService from '../../services/postService';
 import Post from './Post/Post';
 import PostFormRedirect from './PostFormRedirect';
 import PostSorter from './PostSorter/PostSorter';
@@ -9,7 +12,14 @@ const Div = styled.div`
 `;
 
 const PostList = () => {
+  const sort = useQuery().get('sort');
+  const t = useQuery().get('t'); // time range for top sort
+  const { subribbit } = useParams();
   const [posts, setPosts] = useState(postsList);
+
+  useEffect(() => {
+    // postService.
+  }, [sort, t, subribbit]);
 
   const currDate = new Date();
   return (

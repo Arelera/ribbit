@@ -122,6 +122,11 @@ const getPathsDisplay = (currPath, username) =>
       text: `r/${currPath.split('/')[2]}`,
     },
     {
+      path: '/submit',
+      icon: CreateIcon,
+      text: `Create Post`,
+    },
+    {
       path: '/settings',
       icon: CogIcon,
       text: 'User Settings',

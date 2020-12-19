@@ -7,7 +7,7 @@ const getTokenFrom = require('../helpers/getTokenFrom');
 // get a subribbit
 router.get('/:name', async (req, res, next) => {
   try {
-    const name = req.params.name;
+    const { name } = req.params;
 
     const response = await client.query(
       `
@@ -18,6 +18,48 @@ router.get('/:name', async (req, res, next) => {
     );
 
     res.send(response.rows[0]);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// get subribbits with similar name
+router.get('/similar/:name', async (req, res, next) => {
+  try {
+    const { name } = req.params;
+    const { limit } = req.query;
+
+    const response = await client.query(
+      `
+      SELECT name, "memberCount" FROM subribbits
+      WHERE name ILIKE ($1 || '%')
+      ORDER BY "memberCount"
+      LIMIT $2;
+      `,
+      [name, limit]
+    );
+
+    res.json(response.rows);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// get top 5 subribbits
+router.get('/top/:limit', async (req, res, next) => {
+  try {
+    const { limit } = req.params;
+
+    const response = await client.query(
+      `
+        SELECT * FROM subribbits
+        ORDER BY "memberCount"
+        LIMIT $1;
+      `,
+      [limit]
+    );
+
+    res.json(response.rows);
   } catch (error) {
     next(error);
   }

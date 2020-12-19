@@ -52,8 +52,6 @@ const PostSorter = ({ setPosts }) => {
   const sortQuery = useQuery().get('sort');
   // const timeQuery = useQuery().get('t');
   const [sortBy, setSortBy] = useState(!!sortQuery || 'new');
-  // sorting will happen on the backend and then will be fetched,
-  // that way it'll work properly with pagination
 
   useEffect(() => {
     setSortBy(sortQuery || 'new');

@@ -1,4 +1,7 @@
-import styled, { css } from 'styled-components';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import subribbitService from '../../services/subribitService';
 import PostList from '../PostList/PostList';
 import Button from '../reusable/Button';
 import SubPageAside from './SubPageAside';
@@ -43,6 +46,19 @@ const Content = styled.div`
 `;
 
 const SubribbitPage = () => {
+  const { subribbit } = useParams();
+  const [info, setInfo] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    subribbitService.getOne(subribbit).then((res) => {
+      setInfo(res);
+      setIsLoading(false);
+      console.log({ res });
+    });
+  }, [subribbit]);
+
+  if (isLoading) return 'ok';
   return (
     <Div>
       <Banner>
@@ -60,11 +76,11 @@ const SubribbitPage = () => {
   );
 };
 
-const info = {
+const infoFake = {
   name: 'webdev',
   description:
     'Some cool description telling you what this whole subribbit is about while being understandably brief.',
-  members: 45621,
+  memberCount: 45621,
   createdAt: '2020-12-18T18:24:51.194Z',
 };
 

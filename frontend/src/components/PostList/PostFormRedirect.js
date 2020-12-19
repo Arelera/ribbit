@@ -30,11 +30,12 @@ const PostFormRedirect = () => {
   return (
     <Div>
       <InputText
-        onFocus={() =>
+        onClick={() =>
           history.push(subribbit ? `/r/${subribbit}/submit` : '/submit')
         }
         type="text"
         value=""
+        readOnly
         placeholder="Create Post"
       />
     </Div>
