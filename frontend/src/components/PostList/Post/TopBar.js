@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { formatDistance, subDays } from 'date-fns';
+import { formatDistance } from 'date-fns';
 
 const Top = styled.div`
   margin: 0 8px 8px;
@@ -29,8 +29,8 @@ const TopBar = ({ post, currDate }) => {
         <Subreddit>r/{post.subribbit}</Subreddit>
       </Link>
       Posted by{' '}
-      <Link to="">
-        <Poster>u/{post.user}</Poster>
+      <Link to={`/user/${post.username}`}>
+        <Poster>u/{post.username}</Poster>
       </Link>
       <span>{formatDistance(new Date(post.createdAt), currDate)} ago</span>
     </Top>

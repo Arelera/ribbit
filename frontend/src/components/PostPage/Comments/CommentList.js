@@ -6,7 +6,7 @@ const Div = styled.div`
   padding: 0 16px 16px 0;
 `;
 
-const CommentList = ({ comments, currDate }) => {
+const CommentList = ({ comments, setComments, currDate }) => {
   return (
     <Div>
       {comments
@@ -14,6 +14,7 @@ const CommentList = ({ comments, currDate }) => {
         .map((comment) => (
           <CommentGroup
             comment={comment}
+            setComments={setComments}
             comments={comments}
             currDate={currDate}
             key={comment.id}

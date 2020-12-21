@@ -58,14 +58,14 @@ const Icon = styled.div`
   padding-right: 4px;
 `;
 
-const PostContent = ({ post }) => {
+const PostContent = ({ post, commentsLength }) => {
   return (
     <Div>
       <Content>
         <VoteBar post={post} />
         <Post>
           <Top>
-            Posted by <Link to={`u/${post.creator}`}>u/{post.creator}</Link>{' '}
+            Posted by <Link to={`u/${post.username}`}>u/{post.username}</Link>{' '}
             {formatDistance(new Date(post.createdAt), new Date())} ago
           </Top>
           <Title>{post.title}</Title>
@@ -76,7 +76,7 @@ const PostContent = ({ post }) => {
             <Icon>
               <CommentIcon />
             </Icon>
-            <span>{post.comments.length} Comments</span>
+            <span>{commentsLength} Comments</span>
           </Bottom>
         </Post>
       </Content>

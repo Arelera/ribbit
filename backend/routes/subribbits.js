@@ -45,7 +45,7 @@ router.get('/similar/:name', async (req, res, next) => {
   }
 });
 
-// get top 5 subribbits
+// get top "limit" subribbits
 router.get('/top/:limit', async (req, res, next) => {
   try {
     const { limit } = req.params;

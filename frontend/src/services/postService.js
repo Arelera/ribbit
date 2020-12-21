@@ -1,15 +1,13 @@
 import axios from 'axios';
 import { baseUrl } from './config';
 
-const getAll = async (order) => {
-  const response = await axios.get(`${baseUrl}/posts`, { params: { order } });
+const getAll = async (params) => {
+  const response = await axios.get(`${baseUrl}/posts`, { params });
   return response.data;
 };
 
-const getBySub = async (sub, order) => {
-  const response = await axios.get(`${baseUrl}/posts/${sub}`, {
-    params: { order },
-  });
+const getById = async (id) => {
+  const response = await axios.get(`${baseUrl}/posts/${id}`);
   return response.data;
 };
 
@@ -27,8 +25,8 @@ const createOne = async (post) => {
 
 const postService = {
   getAll,
+  getById,
   createOne,
-  getBySub,
 };
 
 export default postService;

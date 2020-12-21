@@ -85,10 +85,18 @@ const Sorter = ({ comments, setComments }) => {
           setComments([...array.sort((a, b) => a.upvotes - b.upvotes)]);
           break;
         case 'new':
-          setComments([...array.sort((a, b) => a.createdAt - b.createdAt)]);
+          setComments([
+            ...array.sort(
+              (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            ),
+          ]);
           break;
         case 'old':
-          setComments([...array.sort((a, b) => b.createdAt - a.createdAt)]);
+          setComments([
+            ...array.sort(
+              (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+            ),
+          ]);
           break;
         default:
           setComments([...array.sort((a, b) => b.upvotes - a.upvotes)]);

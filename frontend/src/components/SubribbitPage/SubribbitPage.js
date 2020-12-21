@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import subribbitService from '../../services/subribitService';
+import subribbitService from '../../services/subribbitService';
 import PostList from '../PostList/PostList';
 import Button from '../reusable/Button';
 import SubPageAside from './SubPageAside';
@@ -54,7 +54,6 @@ const SubribbitPage = () => {
     subribbitService.getOne(subribbit).then((res) => {
       setInfo(res);
       setIsLoading(false);
-      console.log({ res });
     });
   }, [subribbit]);
 
@@ -74,14 +73,6 @@ const SubribbitPage = () => {
       </Content>
     </Div>
   );
-};
-
-const infoFake = {
-  name: 'webdev',
-  description:
-    'Some cool description telling you what this whole subribbit is about while being understandably brief.',
-  memberCount: 45621,
-  createdAt: '2020-12-18T18:24:51.194Z',
 };
 
 export default SubribbitPage;

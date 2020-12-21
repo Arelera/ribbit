@@ -48,9 +48,9 @@ const Icon = styled.div`
   margin-right: 4px;
 `;
 
-const PostSorter = ({ setPosts }) => {
+// this component displays sorting options and sets the query params so we get sorted data on fetch
+const PostSorter = () => {
   const sortQuery = useQuery().get('sort');
-  // const timeQuery = useQuery().get('t');
   const [sortBy, setSortBy] = useState(!!sortQuery || 'new');
 
   useEffect(() => {

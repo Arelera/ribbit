@@ -6,6 +6,7 @@ const app = express();
 const usersRouter = require('./routes/users');
 const subribbitsRouter = require('./routes/subribbits');
 const postsRouter = require('./routes/posts');
+const commentsRouter = require('./routes/comments');
 
 // middleware
 app.use(cors());
@@ -16,6 +17,7 @@ app.use(express.static('build'));
 app.use('/api/users', usersRouter);
 app.use('/api/subribbits', subribbitsRouter);
 app.use('/api/posts', postsRouter);
+app.use('/api/comments', commentsRouter);
 
 // route catch-all
 app.use('/*', (req, res, next) => {

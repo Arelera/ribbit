@@ -4,26 +4,33 @@ import Comment from './Comment';
 const ChildComments = styled.div`
   margin-left: 30px;
   border-left: 2px solid ${({ theme }) => theme.gray3};
+  max-width: 100%;
 `;
 
-const CommentGroup = ({ comments, comment, currDate }) => {
+const CommentGroup = ({ comments, comment, setComments, currDate }) => {
   const childComments = comments.filter((c) => c.parentComment === comment.id);
   return (
-    <div>
-      <Comment comment={comment} currDate={currDate} />
+    <>
+      <Comment
+        comment={comment}
+        comments={comments}
+        setComments={setComments}
+        currDate={currDate}
+      />
       {childComments.length > 0 && (
         <ChildComments>
-          {childComments.map((d) => (
+          {childComments.map((child) => (
             <CommentGroup
-              comment={d}
+              comment={child}
               comments={comments}
+              setComments={setComments}
               currDate={currDate}
-              key={d.id}
+              key={child.id}
             />
           ))}
         </ChildComments>
       )}
-    </div>
+    </>
   );
 };
 

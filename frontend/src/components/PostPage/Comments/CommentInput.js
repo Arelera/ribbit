@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import commentService from '../../../services/commentService';
 import Button from '../../reusable/Button';
 import Button2 from '../../reusable/Button2';
 
@@ -66,16 +69,29 @@ const SignupBtn = styled(Button)`
   padding: 3px 16px;
 `;
 
-const CommentInput = ({ showUserForm }) => {
+const CommentInput = ({ showUserForm, comments, setComments }) => {
+  const { id } = useParams(); // post id
   const user = useSelector((state) => state.user);
+  const [commentContent, setCommentContent] = useState('');
+
+  const commentHandler = () => {
+    commentService.commentOn(id, { commentContent }).then((res) => {
+      setComments([res, ...comments]);
+      setCommentContent('');
+    });
+  };
 
   return (
     <Div>
       {user ? (
         <>
-          <Textarea placeholder="What are your thoughts?"></Textarea>
+          <Textarea
+            value={commentContent}
+            onChange={(e) => setCommentContent(e.target.value)}
+            placeholder="What are your thoughts?"
+          ></Textarea>
           <Bottom>
-            <CommentButton>COMMENT</CommentButton>
+            <CommentButton onClick={commentHandler}>COMMENT</CommentButton>
           </Bottom>
         </>
       ) : (

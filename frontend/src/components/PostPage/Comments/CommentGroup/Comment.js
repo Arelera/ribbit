@@ -1,13 +1,16 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { formatDistance } from 'date-fns';
-import CommentIcon from '../../../../icons/CommentIcon';
 import Voter from './Voter';
+import Bottom from './Bottom';
+import commentService from '../../../../services/commentService';
+import { useSelector } from 'react-redux';
 
 const Div = styled.div`
   line-height: 21px;
   margin-top: 16px;
   display: flex;
+  width: 100%;
   ${({ theme }) =>
     css`
       color: ${theme.gray0};
@@ -38,6 +41,10 @@ const TimeAgoEdit = styled(TimeAgo)`
   font-style: italic;
 `;
 
+const Container = styled.div`
+  width: 100%;
+`;
+
 const Content = styled.div`
   font-size: ${({ theme }) => theme.fontMed};
 `;
@@ -52,40 +59,29 @@ const P = styled.p`
   }
 `;
 
-const Bottom = styled.div``;
+const Comment = ({ comment, comments, setComments, currDate }) => {
+  const { id } = useParams(); // post id
+  const user = useSelector((state) => state.user);
 
-const Icon = styled.div`
-  display: inline-block;
-  vertical-align: middle;
-  height: 14px;
-  margin-right: 4px;
-`;
+  const replyHandler = (replyContent, setExpanded) => {
+    commentService
+      .commentOn(id, {
+        parentComment: comment.id,
+        comment: replyContent,
+      })
+      .then((res) => {
+        setComments([{ ...res, username: user.username }, ...comments]);
+        setExpanded(false);
+      });
+  };
 
-const BottomItem = styled.button`
-  background: none;
-  border: none;
-  font-weight: 700;
-  padding: 4px;
-  border-radius: 2px;
-  cursor: pointer;
-  ${({ theme }) =>
-    css`
-      color: ${theme.gray2};
-      font-size: ${theme.fontSmall};
-      :hover {
-        background: ${theme.gray3};
-      }
-    `}
-`;
-
-const Comment = ({ comment, currDate }) => {
   return (
     <Div>
       <Voter />
-      <div>
+      <Container>
         <Top>
           <Link to="/" component={Poster}>
-            {comment.creator}
+            {comment.username}
           </Link>
           <Points> {comment.upvotes} points</Points>
           <TimeAgo>
@@ -108,15 +104,8 @@ const Comment = ({ comment, currDate }) => {
             <P key={i}>{p}</P>
           ))}
         </Content>
-        <Bottom>
-          <BottomItem>
-            <Icon>
-              <CommentIcon />
-            </Icon>
-            Reply
-          </BottomItem>
-        </Bottom>
-      </div>
+        <Bottom replyHandler={replyHandler} />
+      </Container>
     </Div>
   );
 };

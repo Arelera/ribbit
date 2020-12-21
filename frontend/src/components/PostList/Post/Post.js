@@ -74,7 +74,7 @@ const Post = ({ post, currDate }) => {
             <P key={i}>{p}</P>
           ))}
         </TextContainer>
-        <BottomBar items={bottomBarItems(7)} />
+        <BottomBar items={bottomBarItems(post.commentCount)} />
       </Content>
     </Div>
   );

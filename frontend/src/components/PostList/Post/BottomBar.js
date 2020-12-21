@@ -7,7 +7,7 @@ const Bottom = styled.div`
 
   height: 32px;
   font-weight: 700;
-  margin-left: 8px;
+  margin-left: 4px;
   ${({ theme }) =>
     css`
       color: ${theme.gray2};

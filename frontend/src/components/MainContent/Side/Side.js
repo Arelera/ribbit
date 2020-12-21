@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import subribbitService from '../../../services/subribitService';
+import subribbitService from '../../../services/subribbitService';
 import Button from '../../reusable/Button';
 
 const Aside = styled.aside`
