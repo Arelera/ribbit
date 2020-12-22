@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import MainContent from './components/MainContent/MainContent';
+import Modal from './components/Modal/Modal';
 import Navbar from './components/Navbar/Navbar';
 import PostForm from './components/PostForm/PostForm';
 import PostPage from './components/PostPage/PostPage';
@@ -15,6 +16,7 @@ const App = () => {
   const dispatch = useDispatch();
   const [userFormVisible, setUserFormVisible, userFormRef] = useVisible();
   const [userFormType, setUserFormType] = useState('login');
+  const modal = useSelector((state) => state.modal);
 
   const showUserForm = (type) => {
     if (!type) return setUserFormVisible(false);
@@ -28,6 +30,7 @@ const App = () => {
 
   return (
     <Router>
+      {modal && <Modal {...modal} />}
       <Navbar showUserForm={showUserForm} />
       <Switch>
         <Route path="/" exact component={MainContent} />

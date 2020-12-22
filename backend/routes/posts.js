@@ -85,7 +85,6 @@ router.get('/', async (req, res, next) => {
         ORDER BY p."createdAt" DESC;
         `
       );
-      console.log(response.rows);
       return res.send(response.rows);
     }
   } catch (error) {

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import useQuery from '../../../hooks/useQuery';
 import useVisible from '../../../hooks/useVisible';
 import ChevBotIcon from '../../../icons/ChevBotIcon';
+import { sortComments } from '../../../store/actions/comments';
 
 const Sort = styled.div`
   position: relative;
@@ -66,7 +68,8 @@ const SortChoice = styled.button`
     `}
 `;
 
-const Sorter = ({ comments, setComments }) => {
+const Sorter = () => {
+  const dispatch = useDispatch();
   const history = useHistory();
   const query = useQuery().get('sort');
   const [sortBy, setSortBy] = useState(query || 'top');
@@ -79,31 +82,8 @@ const Sorter = ({ comments, setComments }) => {
   };
 
   useEffect(() => {
-    const sorter = (array) => {
-      switch (sortBy) {
-        case 'bottom':
-          setComments([...array.sort((a, b) => a.upvotes - b.upvotes)]);
-          break;
-        case 'new':
-          setComments([
-            ...array.sort(
-              (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-            ),
-          ]);
-          break;
-        case 'old':
-          setComments([
-            ...array.sort(
-              (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-            ),
-          ]);
-          break;
-        default:
-          setComments([...array.sort((a, b) => b.upvotes - a.upvotes)]);
-      }
-    };
-    sorter(comments);
-  }, [sortBy, query, setComments]);
+    dispatch(sortComments(sortBy));
+  }, [sortBy, query, dispatch]);
 
   return (
     <Sort ref={expandedRef}>

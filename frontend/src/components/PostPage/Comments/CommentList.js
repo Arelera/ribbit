@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import CommentGroup from './CommentGroup/CommentGroup';
 
@@ -6,7 +7,8 @@ const Div = styled.div`
   padding: 0 16px 16px 0;
 `;
 
-const CommentList = ({ comments, setComments, currDate }) => {
+const CommentList = ({ currDate }) => {
+  const comments = useSelector((state) => state.comments);
   return (
     <Div>
       {comments
@@ -14,7 +16,6 @@ const CommentList = ({ comments, setComments, currDate }) => {
         .map((comment) => (
           <CommentGroup
             comment={comment}
-            setComments={setComments}
             comments={comments}
             currDate={currDate}
             key={comment.id}

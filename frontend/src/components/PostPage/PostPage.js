@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import postService from '../../services/postService';
-import commentService from '../../services/commentService';
 import Comments from './Comments/Comments';
 import PostContent from './PostContent';
+import { useDispatch, useSelector } from 'react-redux';
+import { getComments } from '../../store/actions/comments';
 
 const Div = styled.div`
   max-width: 1280px;
@@ -39,20 +40,20 @@ const Container = styled.div`
 `;
 
 const PostPage = ({ showUserForm }) => {
+  const dispatch = useDispatch();
   const [post, setPost] = useState();
-  const [comments, setComments] = useState();
+  const comments = useSelector((state) => state.comments);
   const [loading, setLoading] = useState(true);
   const { id } = useParams(); // post id
 
   useEffect(() => {
+    // getting post data
     postService.getById(id).then((res) => {
       setPost(res);
     });
 
-    commentService.getByPost(id).then((res) => {
-      setComments(res);
-    });
-  }, [id]);
+    dispatch(getComments(id));
+  }, [id, dispatch]);
 
   useEffect(() => {
     if (post && comments) {
@@ -73,32 +74,11 @@ const PostPage = ({ showUserForm }) => {
       <Div>
         <Container>
           <PostContent post={post} commentsLength={comments.length} />
-          <Comments
-            showUserForm={showUserForm}
-            comments={comments}
-            setComments={setComments}
-          />
+          <Comments showUserForm={showUserForm} comments={comments} />
         </Container>
       </Div>
     </>
   );
 };
-
-// const post = {
-//   id: 1,
-//   subribbit: 'webdev',
-//   creator: 'coolGuyye111',
-//   title:
-//     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
-//   content:
-//     'Enim neque volutpat ac tincidunt vitae semper quis lectus nulla. Tempus urna et pharetra pharetra massa massa. Blandit volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque.',
-//   createdAt: '2020-12-17T11:46:53.649Z',
-//   comments: [
-//     {
-//       id: 1,
-//       username: 'Whatisup0101010',
-//     },
-//   ],
-// };
 
 export default PostPage;

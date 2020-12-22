@@ -1,8 +1,16 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import useVisible from '../../../../hooks/useVisible';
 import CommentIcon from '../../../../icons/CommentIcon';
-import Button from '../../../reusable/Button';
-import Button2 from '../../../reusable/Button2';
+import EllipsisIcon from '../../../../icons/EllipsisIcon';
+import {
+  addComment,
+  deleteComment,
+  editComment,
+} from '../../../../store/actions/comments';
+import ReplyEdit from './ReplyEdit';
 
 const Div = styled.div``;
 
@@ -10,15 +18,18 @@ const Icon = styled.div`
   display: inline-block;
   vertical-align: middle;
   height: 14px;
-  margin-right: 4px;
 `;
 
 const BottomItem = styled.button`
+  font-weight: 700;
   background: none;
   border: none;
-  font-weight: 700;
   padding: 4px;
+  border-radius: 2px;
   cursor: pointer;
+  span {
+    margin-left: 4px;
+  }
   ${({ theme }) =>
     css`
       color: ${theme.gray2};
@@ -29,86 +40,118 @@ const BottomItem = styled.button`
     `}
 `;
 
-const ReplyBox = styled.div`
-  width: 100%;
-  min-height: 20px;
-  margin: 8px 0 16px 0;
-  padding-left: 22px;
-  border-left: 1px solid ${({ theme }) => theme.postBorder};
+const MenuContainer = styled.div`
+  position: relative;
+  display: inline-block;
 `;
 
-const Replyarea = styled.textarea`
-  width: 100%;
-  background: red;
-  padding: 8px 16px;
-  resize: vertical;
-  min-height: 100px;
-  border-radius: 4px 4px 0 0;
-  color: inherit;
+const Menu = styled.div`
+  position: absolute;
   ${({ theme }) =>
     css`
       ${theme.box()}
-      font-size: ${theme.fontMed};
     `}
-
-  border-bottom: none;
-  display: block;
+  border-radius: 2px;
+  overflow: hidden;
 `;
 
-const ReplyBar = styled.div`
-  width: 100%;
-  border-radius: 0 0 4px 4px;
-  padding: 4px 8px;
-  ${({ theme }) =>
-    css`
-      ${theme.box()}
-      background: ${theme.gray3};
-    `}
-  border-top: none;
-`;
-
-const ReplyBtn = styled(Button)`
-  padding: 3px 10px;
-  width: 96px;
-  margin-right: 10px;
-`;
-
-const CancelBtn = styled(Button2)`
-  padding: 3px 10px;
-  width: 96px;
+const MenuItem = styled.button`
+  background: none;
   border: none;
+  font-weight: 700;
+  width: 100%;
+  text-align: left;
+  padding: 8px;
+  cursor: pointer;
+  outline: none;
+
+  ${({ theme }) =>
+    css`
+      color: ${theme.gray2};
+      :hover {
+        background: ${theme.gray3};
+      }
+    `}
 `;
 
-const Bottom = ({ replyHandler }) => {
-  const [replyExpanded, setReplyExpanded] = useState(false);
-  const [replyContent, setReplyContent] = useState('');
+const Bottom = ({ commentId, content }) => {
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const [isReply, setIsReply] = useState(true);
+  const [replyEditExpanded, setReplyEditExpanded] = useState(false);
+  const [menuExpanded, setMenuExpanded, menuRef] = useVisible(false);
+
+  const replyEditHandler = (newContent) => {
+    if (isReply) {
+      dispatch(addComment(id, newContent, commentId)).then((res) => {
+        setReplyEditExpanded(false);
+      });
+    } else {
+      dispatch(editComment(commentId, newContent)).then((res) => {
+        setReplyEditExpanded(false);
+      });
+    }
+  };
+
+  const deleteHandler = () => {
+    dispatch(deleteComment(commentId)).then((res) => {
+      dispatch({ type: 'CLEAR_MODAL' });
+    });
+  };
 
   return (
     <Div>
-      <BottomItem onClick={() => setReplyExpanded(!replyExpanded)}>
+      <BottomItem
+        onClick={() => {
+          setReplyEditExpanded(!replyEditExpanded);
+          setIsReply(true);
+        }}
+      >
         <Icon>
           <CommentIcon />
         </Icon>
-        Reply
+        <span>Reply</span>
       </BottomItem>
-      {replyExpanded && (
-        <ReplyBox>
-          <Replyarea
-            value={replyContent}
-            onChange={(e) => setReplyContent(e.target.value)}
-            placeholder="What are your thoughts?"
-          ></Replyarea>
-          <ReplyBar>
-            <ReplyBtn
-              onClick={() => replyHandler(replyContent, setReplyExpanded)}
+      <MenuContainer ref={menuRef}>
+        <BottomItem onClick={() => setMenuExpanded(!menuExpanded)}>
+          <Icon>
+            <EllipsisIcon />
+          </Icon>
+        </BottomItem>
+        {menuExpanded && (
+          <Menu>
+            <MenuItem
+              onClick={() => {
+                setIsReply(false);
+                setReplyEditExpanded(true);
+              }}
             >
-              REPLY
-            </ReplyBtn>
-            <CancelBtn onClick={() => setReplyExpanded(false)}>
-              CANCEL
-            </CancelBtn>
-          </ReplyBar>
-        </ReplyBox>
+              Edit
+            </MenuItem>
+            <MenuItem
+              onClick={() =>
+                dispatch({
+                  type: 'SET_MODAL',
+                  title: 'Delete comment',
+                  msg: 'Are you sure you wanna delete your comment?',
+                  acceptBtn: 'DELETE',
+                  cancelBtn: 'KEEP',
+                  acceptHandler: deleteHandler,
+                })
+              }
+            >
+              Delete
+            </MenuItem>
+          </Menu>
+        )}
+      </MenuContainer>
+      {replyEditExpanded && (
+        <ReplyEdit
+          replyEditHandler={replyEditHandler}
+          collapseReply={() => setReplyEditExpanded(false)}
+          isReply={isReply}
+          content={content}
+        />
       )}
     </Div>
   );

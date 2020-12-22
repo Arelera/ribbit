@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import commentService from '../../../services/commentService';
+import { addComment } from '../../../store/actions/comments';
 import Button from '../../reusable/Button';
 import Button2 from '../../reusable/Button2';
 
@@ -69,14 +69,14 @@ const SignupBtn = styled(Button)`
   padding: 3px 16px;
 `;
 
-const CommentInput = ({ showUserForm, comments, setComments }) => {
+const CommentInput = ({ showUserForm }) => {
+  const dispatch = useDispatch();
   const { id } = useParams(); // post id
   const user = useSelector((state) => state.user);
   const [commentContent, setCommentContent] = useState('');
 
   const commentHandler = () => {
-    commentService.commentOn(id, { commentContent }).then((res) => {
-      setComments([res, ...comments]);
+    dispatch(addComment(id, commentContent)).then((res) => {
       setCommentContent('');
     });
   };

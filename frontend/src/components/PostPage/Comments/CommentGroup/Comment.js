@@ -1,10 +1,8 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { formatDistance } from 'date-fns';
 import Voter from './Voter';
 import Bottom from './Bottom';
-import commentService from '../../../../services/commentService';
-import { useSelector } from 'react-redux';
 
 const Div = styled.div`
   line-height: 21px;
@@ -24,7 +22,7 @@ const Top = styled.div`
     `}
 `;
 
-const Poster = styled.a`
+const Poster = styled.span`
   :hover {
     text-decoration: underline;
   }
@@ -59,40 +57,25 @@ const P = styled.p`
   }
 `;
 
-const Comment = ({ comment, comments, setComments, currDate }) => {
-  const { id } = useParams(); // post id
-  const user = useSelector((state) => state.user);
-
-  const replyHandler = (replyContent, setExpanded) => {
-    commentService
-      .commentOn(id, {
-        parentComment: comment.id,
-        comment: replyContent,
-      })
-      .then((res) => {
-        setComments([{ ...res, username: user.username }, ...comments]);
-        setExpanded(false);
-      });
-  };
-
+const Comment = ({ comment, currDate }) => {
   return (
     <Div>
       <Voter />
       <Container>
         <Top>
-          <Link to="/" component={Poster}>
-            {comment.username}
+          <Link to={`/user/${comment.username}`}>
+            <Poster>{comment.username}</Poster>
           </Link>
           <Points> {comment.upvotes} points</Points>
           <TimeAgo>
             {' '}
             · {formatDistance(new Date(comment.createdAt), currDate)} ago
           </TimeAgo>
-          {comment.updatedAt && (
+          {comment.editedAt && (
             <TimeAgoEdit>
               {' '}
               · edited {formatDistance(
-                new Date(comment.updatedAt),
+                new Date(comment.editedAt),
                 currDate
               )}{' '}
               ago
@@ -104,7 +87,7 @@ const Comment = ({ comment, comments, setComments, currDate }) => {
             <P key={i}>{p}</P>
           ))}
         </Content>
-        <Bottom replyHandler={replyHandler} />
+        <Bottom content={comment.content} commentId={comment.id} />
       </Container>
     </Div>
   );
