@@ -54,9 +54,11 @@ const InputText = styled.input`
 
 const Textarea = styled.textarea`
   padding: 8px 16px;
+  min-height: 100pxs;
   width: 100%;
   background: none;
   border-radius: 4px;
+  resize: vertical;
   ${({ theme }) =>
     css`
       font-size: ${theme.fontMed};

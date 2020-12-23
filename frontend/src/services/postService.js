@@ -23,10 +23,28 @@ const createOne = async (post) => {
   }
 };
 
+const editOne = async (post, content, token) => {
+  const response = await axios.patch(
+    `${baseUrl}/posts/${post}`,
+    { content },
+    { headers: { Authorization: token } }
+  );
+  return response.data;
+};
+
+const deleteOne = async (post, token) => {
+  const response = await axios.delete(`${baseUrl}/posts/${post}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
 const postService = {
   getAll,
   getById,
   createOne,
+  editOne,
+  deleteOne,
 };
 
 export default postService;

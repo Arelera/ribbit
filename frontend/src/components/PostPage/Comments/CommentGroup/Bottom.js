@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import useVisible from '../../../../hooks/useVisible';
 import CommentIcon from '../../../../icons/CommentIcon';
-import EllipsisIcon from '../../../../icons/EllipsisIcon';
 import {
   addComment,
   deleteComment,
   editComment,
 } from '../../../../store/actions/comments';
+import ElMenu from '../../../ElMenu/ElMenu';
 import ReplyEdit from './ReplyEdit';
 
 const Div = styled.div``;
@@ -40,46 +39,11 @@ const BottomItem = styled.button`
     `}
 `;
 
-const MenuContainer = styled.div`
-  position: relative;
-  display: inline-block;
-`;
-
-const Menu = styled.div`
-  position: absolute;
-  ${({ theme }) =>
-    css`
-      ${theme.box()}
-    `}
-  border-radius: 2px;
-  overflow: hidden;
-`;
-
-const MenuItem = styled.button`
-  background: none;
-  border: none;
-  font-weight: 700;
-  width: 100%;
-  text-align: left;
-  padding: 8px;
-  cursor: pointer;
-  outline: none;
-
-  ${({ theme }) =>
-    css`
-      color: ${theme.gray2};
-      :hover {
-        background: ${theme.gray3};
-      }
-    `}
-`;
-
-const Bottom = ({ commentId, content }) => {
+const Bottom = ({ commentId, isMyComment, content }) => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [isReply, setIsReply] = useState(true);
   const [replyEditExpanded, setReplyEditExpanded] = useState(false);
-  const [menuExpanded, setMenuExpanded, menuRef] = useVisible(false);
 
   const replyEditHandler = (newContent) => {
     if (isReply) {
@@ -112,24 +76,20 @@ const Bottom = ({ commentId, content }) => {
         </Icon>
         <span>Reply</span>
       </BottomItem>
-      <MenuContainer ref={menuRef}>
-        <BottomItem onClick={() => setMenuExpanded(!menuExpanded)}>
-          <Icon>
-            <EllipsisIcon />
-          </Icon>
-        </BottomItem>
-        {menuExpanded && (
-          <Menu>
-            <MenuItem
-              onClick={() => {
+
+      {isMyComment && (
+        <ElMenu
+          items={[
+            {
+              text: 'Edit',
+              onClick: () => {
                 setIsReply(false);
                 setReplyEditExpanded(true);
-              }}
-            >
-              Edit
-            </MenuItem>
-            <MenuItem
-              onClick={() =>
+              },
+            },
+            {
+              text: 'Delete',
+              onClick: () =>
                 dispatch({
                   type: 'SET_MODAL',
                   title: 'Delete comment',
@@ -137,14 +97,12 @@ const Bottom = ({ commentId, content }) => {
                   acceptBtn: 'DELETE',
                   cancelBtn: 'KEEP',
                   acceptHandler: deleteHandler,
-                })
-              }
-            >
-              Delete
-            </MenuItem>
-          </Menu>
-        )}
-      </MenuContainer>
+                }),
+            },
+          ]}
+        />
+      )}
+
       {replyEditExpanded && (
         <ReplyEdit
           replyEditHandler={replyEditHandler}

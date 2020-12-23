@@ -1,5 +1,9 @@
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import CommentIcon from '../../../icons/CommentIcon';
+import { deletePost } from '../../../store/actions/posts';
+import ElMenu from '../../ElMenu/ElMenu';
 
 const Bottom = styled.div`
   display: flex;
@@ -23,7 +27,7 @@ const Item = styled.div`
   }
 `;
 
-const Icon = styled.a`
+const Icon = styled.span`
   padding-right: 4px;
   display: inline-block;
   height: 16px;
@@ -31,17 +35,49 @@ const Icon = styled.a`
   color: inherit;
 `;
 
-const BottomBar = ({ items }) => {
+const BottomBar = ({ postId, commentCount }) => {
+  const dispatch = useDispatch();
+
+  const deleteHandler = () => {
+    dispatch(deletePost(postId));
+  };
+
+  // const editHandler = () => {
+  //   dispatch(editPost(postId, ));
+  // };
+
   return (
     <Bottom>
-      {items.map((item, i) => (
-        <Item key={i}>
-          <Link to="/" component={Icon}>
-            <item.icon />
-          </Link>
-          {item.text}
-        </Item>
-      ))}
+      <Item>
+        <Link to="/">
+          <Icon>
+            <CommentIcon />
+          </Icon>
+        </Link>
+        {commentCount} Comments
+      </Item>
+      <ElMenu
+        items={[
+          {
+            text: 'Delete',
+            onClick: () => {
+              dispatch({
+                type: 'SET_MODAL',
+                title: 'Delete post',
+                msg:
+                  "Are you sure you want to delete your post? You can't undo this.",
+                acceptHandler: deleteHandler,
+                acceptBtn: 'DELETE POST',
+                cancelBtn: 'CANCEL',
+              });
+            },
+          },
+          {
+            text: 'Edit',
+            onClick: () => {},
+          },
+        ]}
+      />
     </Bottom>
   );
 };

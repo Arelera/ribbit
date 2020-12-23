@@ -26,3 +26,23 @@ export const getAllPosts = ({ subribbit, sort, t }) => {
     });
   };
 };
+
+export const editPost = (id, content) => {
+  return async (dispatch) => {
+    const { token } = JSON.parse(localStorage.getItem('user'));
+    const post = await postService.editOne(id, content, token);
+    dispatch({
+      type: 'EDIT_POST',
+      post,
+    });
+  };
+};
+
+export const deletePost = (id) => {
+  return async (dispatch) => {
+    const { token } = JSON.parse(localStorage.getItem('user'));
+    await postService.deleteOne(id, token);
+    dispatch({ type: 'DELETE_POST', id });
+    dispatch({ type: 'CLEAR_MODAL' });
+  };
+};

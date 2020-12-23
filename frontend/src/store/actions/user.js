@@ -5,17 +5,28 @@ export const initUser = () => {
     const userJson = localStorage.getItem('user');
     if (userJson) {
       const user = JSON.parse(userJson);
-      // TODO: remove commented out lines after development is done
-      // trying not to make unnecessary calls here
-      // const response = await userService.initUser(user.token);
-      localStorage.setItem('user', JSON.stringify(user));
-      // if (response) {
-      dispatch({
-        type: 'INIT_USER',
-        user: user,
-      });
-      // }
+      const response = await userService.initUser(user.token);
+      localStorage.setItem('user', JSON.stringify(response));
+      if (response) {
+        dispatch({
+          type: 'INIT_USER',
+          user: response,
+        });
+      }
     }
+  };
+};
+
+// this can be used when backend returns a modified user
+// and we dont wanna make an extra request with initUser
+// for example: joining or exiting subribbits
+export const setUser = (newUser) => {
+  return async (dispatch) => {
+    localStorage.setItem('user', JSON.stringify(newUser));
+    dispatch({
+      type: 'SET_USER',
+      user: newUser,
+    });
   };
 };
 

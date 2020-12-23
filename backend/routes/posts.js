@@ -134,4 +134,48 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+router.patch('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const newContent = req.body.content;
+    const token = getTokenFrom(req);
+    const decodedUser = jwt.verify(token, JWT_SECRET);
+
+    const response = await client.query(
+      `
+      UPDATE posts
+      SET content = $1
+      WHERE id = $2 AND creator = $3
+      RETURNING *;
+    `,
+      [newContent, id, decodedUser.id]
+    );
+
+    res.send(response.rows[0]);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const token = getTokenFrom(req);
+
+    const decodedUser = jwt.verify(token, JWT_SECRET);
+
+    await client.query(
+      `
+      DELETE FROM posts
+      WHERE id = $1 AND creator = $2;
+      `,
+      [id, decodedUser.id]
+    );
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

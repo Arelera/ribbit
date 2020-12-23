@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { formatDistance } from 'date-fns';
 import Voter from './Voter';
 import Bottom from './Bottom';
+import { useSelector } from 'react-redux';
 
 const Div = styled.div`
   line-height: 21px;
@@ -58,6 +59,7 @@ const P = styled.p`
 `;
 
 const Comment = ({ comment, currDate }) => {
+  const user = useSelector((state) => state.user);
   return (
     <Div>
       <Voter />
@@ -87,7 +89,11 @@ const Comment = ({ comment, currDate }) => {
             <P key={i}>{p}</P>
           ))}
         </Content>
-        <Bottom content={comment.content} commentId={comment.id} />
+        <Bottom
+          content={comment.content}
+          isMyComment={comment.creator === user.id}
+          commentId={comment.id}
+        />
       </Container>
     </Div>
   );

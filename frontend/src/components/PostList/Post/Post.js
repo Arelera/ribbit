@@ -1,8 +1,5 @@
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-
-import CommentIcon from '../../../icons/CommentIcon';
-import EllipsisIcon from '../../../icons/EllipsisIcon';
 import BottomBar from './BottomBar';
 import TopBar from './TopBar';
 import VoteBar from './VoteBar';
@@ -74,23 +71,10 @@ const Post = ({ post, currDate }) => {
             <P key={i}>{p}</P>
           ))}
         </TextContainer>
-        <BottomBar items={bottomBarItems(post.commentCount)} />
+        <BottomBar postId={post.id} commentCount={post.commentCount} />
       </Content>
     </Div>
   );
 };
-
-const bottomBarItems = (comments) => [
-  {
-    link: '/',
-    icon: CommentIcon,
-    text: `${comments} Comments`,
-  },
-  {
-    link: '/',
-    icon: EllipsisIcon,
-    text: '',
-  },
-];
 
 export default Post;

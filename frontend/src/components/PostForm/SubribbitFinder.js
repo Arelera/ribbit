@@ -82,11 +82,6 @@ const SubribbitFinder = ({ sub, setSub, error }) => {
     return () => clearTimeout(timeoutId);
   }, [sub]);
 
-  const subClickHandler = (e) => {
-    const subName = e.target.innerText.split('/')[1];
-    setSub(subName);
-  };
-
   return (
     <>
       <SubDropdown>
@@ -103,10 +98,10 @@ const SubribbitFinder = ({ sub, setSub, error }) => {
             {subs.map((sub) => (
               <SubItem
                 type="button"
-                onMouseDown={subClickHandler}
+                onMouseDown={() => setSub(sub.name)}
                 key={sub.name}
               >
-                r/{sub.name}
+                {sub.name}
                 <Members>{sub.memberCount} members</Members>
               </SubItem>
             ))}

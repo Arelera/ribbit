@@ -101,4 +101,75 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+// join a subribbit
+router.patch('/join/:name', async (req, res, next) => {
+  try {
+    const { name } = req.params;
+    const token = getTokenFrom(req);
+    const decodedUser = jwt.verify(token, JWT_SECRET);
+
+    await client.query(
+      `
+      UPDATE subribbits
+      SET "memberCount" = "memberCount" + 1
+      WHERE name = $1;
+      `,
+      [name]
+    );
+
+    const response = await client.query(
+      `
+      UPDATE users
+      SET "joinedSubribbits" = array_append("joinedSubribbits", $1)
+      WHERE id = $2
+      RETURNING id, username, "joinedSubribbits", "createdAt";
+      `,
+      [name, decodedUser.id]
+    );
+    const user = response.rows[0];
+    const newToken = jwt.sign(user, JWT_SECRET);
+    user.token = newToken;
+
+    res.send(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// exit a subribbit
+router.patch('/exit/:name', async (req, res, next) => {
+  try {
+    const { name } = req.params;
+    const token = getTokenFrom(req);
+
+    const decodedUser = jwt.verify(token, JWT_SECRET);
+
+    await client.query(
+      `
+      UPDATE subribbits
+      SET "memberCount" = "memberCount" - 1
+      WHERE name = $1;
+      `,
+      [name]
+    );
+
+    const response = await client.query(
+      `
+      UPDATE users
+      SET "joinedSubribbits" = array_remove("joinedSubribbits", $1)
+      WHERE id = $2
+      RETURNING id, username, "joinedSubribbits", "createdAt";
+      `,
+      [name, decodedUser.id]
+    );
+    const user = response.rows[0];
+    const newToken = jwt.sign(user, JWT_SECRET);
+    user.token = newToken;
+
+    res.send(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

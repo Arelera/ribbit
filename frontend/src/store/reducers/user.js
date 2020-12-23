@@ -4,6 +4,7 @@ const reducer = (state = null, action) => {
     case 'LOGIN':
     case 'SIGNUP':
     case 'INIT_USER':
+    case 'SET_USER':
       return action.user;
     case 'LOGOUT':
       return null;

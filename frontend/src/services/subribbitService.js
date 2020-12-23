@@ -30,11 +30,33 @@ const createOne = async (subribbit) => {
   }
 };
 
+const joinOne = async (subribbit) => {
+  const { token } = JSON.parse(localStorage.getItem('user'));
+  const response = await axios.patch(
+    `${baseUrl}/subribbits/join/${subribbit}`,
+    null,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
+const exitOne = async (subribbit) => {
+  const { token } = JSON.parse(localStorage.getItem('user'));
+  const response = await axios.patch(
+    `${baseUrl}/subribbits/exit/${subribbit}`,
+    null,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
 const subribbitService = {
   getOne,
   getTop,
   getSimilar,
   createOne,
+  joinOne,
+  exitOne,
 };
 
 export default subribbitService;

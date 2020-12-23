@@ -10,7 +10,7 @@ router.get('/:post', async (req, res, next) => {
     const { post } = req.params;
     const response = await client.query(
       `
-      SELECT c.id, post, c."parentComment", content, "createdAt", "editedAt", u.username FROM comments c
+      SELECT c.id, post, c."parentComment", c.creator, content, c."createdAt", "editedAt", u.username FROM comments c
       JOIN users u ON c.creator = u.id
       WHERE post = $1;
       `,
