@@ -42,10 +42,6 @@ const BottomBar = ({ postId, commentCount }) => {
     dispatch(deletePost(postId));
   };
 
-  // const editHandler = () => {
-  //   dispatch(editPost(postId, ));
-  // };
-
   return (
     <Bottom>
       <Item>
@@ -71,10 +67,6 @@ const BottomBar = ({ postId, commentCount }) => {
                 cancelBtn: 'CANCEL',
               });
             },
-          },
-          {
-            text: 'Edit',
-            onClick: () => {},
           },
         ]}
       />

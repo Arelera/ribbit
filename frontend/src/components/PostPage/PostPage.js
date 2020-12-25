@@ -41,10 +41,10 @@ const Container = styled.div`
 
 const PostPage = ({ showUserForm }) => {
   const dispatch = useDispatch();
-  const [post, setPost] = useState();
-  const comments = useSelector((state) => state.comments);
-  const [loading, setLoading] = useState(true);
   const { id } = useParams(); // post id
+  const [post, setPost] = useState();
+  const [loading, setLoading] = useState(true);
+  const comments = useSelector((state) => state.comments);
 
   useEffect(() => {
     // getting post data
@@ -61,7 +61,7 @@ const PostPage = ({ showUserForm }) => {
     }
   }, [post, comments]);
 
-  if (loading) return <div>OK</div>;
+  if (loading) return 'ok';
   return (
     <>
       <SubribbitBanner>
@@ -73,7 +73,11 @@ const PostPage = ({ showUserForm }) => {
       </SubribbitBanner>
       <Div>
         <Container>
-          <PostContent post={post} commentsLength={comments.length} />
+          <PostContent
+            post={post}
+            setPost={setPost}
+            commentsLength={comments.length}
+          />
           <Comments showUserForm={showUserForm} comments={comments} />
         </Container>
       </Div>

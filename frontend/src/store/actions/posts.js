@@ -15,11 +15,15 @@ export const getAllPosts = ({ subribbit, sort, t }) => {
       timeStart = sub(now, { years: 1 });
     }
 
-    const posts = await postService.getAll({
-      subribbit,
-      sort,
-      timeStart,
-    });
+    let posts;
+    const userJson = localStorage.getItem('user');
+    if (userJson) {
+      const { token } = JSON.parse(userJson);
+      posts = await postService.getAll({ subribbit, sort, timeStart }, token);
+    } else {
+      posts = await postService.getAll({ subribbit, sort, timeStart });
+    }
+
     dispatch({
       type: 'GET_ALL_POSTS',
       posts,
@@ -28,13 +32,10 @@ export const getAllPosts = ({ subribbit, sort, t }) => {
 };
 
 export const editPost = (id, content) => {
-  return async (dispatch) => {
+  return async () => {
     const { token } = JSON.parse(localStorage.getItem('user'));
     const post = await postService.editOne(id, content, token);
-    dispatch({
-      type: 'EDIT_POST',
-      post,
-    });
+    return post;
   };
 };
 
@@ -44,5 +45,19 @@ export const deletePost = (id) => {
     await postService.deleteOne(id, token);
     dispatch({ type: 'DELETE_POST', id });
     dispatch({ type: 'CLEAR_MODAL' });
+  };
+};
+
+export const voteOnPost = (id, isUpvote, oldVote) => {
+  return async (dispatch) => {
+    const userJson = localStorage.getItem('user');
+    if (!userJson) {
+      return 'No user';
+    }
+    // no await here because not getting anything from backend anyways
+    // and it will look fast on the frontend
+    const { token } = JSON.parse(userJson);
+    postService.voteOn(id, isUpvote, token);
+    dispatch({ type: 'VOTE_POST', id, isUpvote, oldVote });
   };
 };

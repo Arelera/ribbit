@@ -76,7 +76,13 @@ const ElMenu = ({ items }) => {
       {expanded && (
         <Menu>
           {items.map((item, i) => (
-            <MenuItem onClick={item.onClick} key={i}>
+            <MenuItem
+              onClick={() => {
+                item.onClick();
+                setExpanded(false);
+              }}
+              key={i}
+            >
               {item.text}
             </MenuItem>
           ))}

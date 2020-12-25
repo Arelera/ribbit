@@ -1,8 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import CommentIcon from '../../icons/CommentIcon';
 import VoteBar from '../PostList/Post/VoteBar';
 import { formatDistance } from 'date-fns';
+import ElMenu from '../ElMenu/ElMenu';
+import { useState } from 'react';
+import PostEdit from './PostEdit';
+import { useDispatch } from 'react-redux';
+import { deletePost, editPost } from '../../store/actions/posts';
 
 const Div = styled.div`
   margin: 0 auto;
@@ -38,7 +43,7 @@ const Title = styled.h1`
 
 const P = styled.p`
   font-size: ${({ theme }) => theme.fontMed};
-  padding: 12px 4px 12px 0;
+  padding: 12px 8px 12px 0;
 `;
 
 const Bottom = styled.div`
@@ -52,13 +57,35 @@ const Bottom = styled.div`
 `;
 
 const Icon = styled.div`
-  vertical-align: top;
+  vertical-align: middle;
   display: inline-block;
   height: 16px;
   padding-right: 4px;
 `;
 
-const PostContent = ({ post, commentsLength }) => {
+const EditedAt = styled.span`
+  font-style: italic;
+`;
+
+const PostContent = ({ post, setPost, commentsLength }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const currDate = new Date();
+  const [editing, setEditing] = useState(false);
+
+  const deleteHandler = () => {
+    dispatch(deletePost(post.id)).then((res) => {
+      history.push('/');
+    });
+  };
+
+  const editHandler = (content) => {
+    dispatch(editPost(post.id, content)).then((res) => {
+      setPost(res);
+      setEditing(false);
+    });
+  };
+
   return (
     <Div>
       <Content>
@@ -66,17 +93,34 @@ const PostContent = ({ post, commentsLength }) => {
         <Post>
           <Top>
             Posted by <Link to={`u/${post.username}`}>u/{post.username}</Link>{' '}
-            {formatDistance(new Date(post.createdAt), new Date())} ago
+            {formatDistance(new Date(post.createdAt), currDate)} ago{' '}
+            {post.editedAt && (
+              <EditedAt>
+                · edited {formatDistance(new Date(post.editedAt), currDate)} ago
+              </EditedAt>
+            )}
           </Top>
           <Title>{post.title}</Title>
-          {post.content.split('\n').map((c, i) => (
-            <P key={i}>{c}</P>
-          ))}
+          {editing ? (
+            <PostEdit
+              content={post.content}
+              editHandler={editHandler}
+              cancel={() => setEditing(false)}
+            />
+          ) : (
+            post.content.split('\n').map((c, i) => <P key={i}>{c}</P>)
+          )}
           <Bottom>
             <Icon>
               <CommentIcon />
             </Icon>
             <span>{commentsLength} Comments</span>
+            <ElMenu
+              items={[
+                { text: 'Delete', onClick: deleteHandler },
+                { text: 'Edit', onClick: () => setEditing(!editing) },
+              ]}
+            />
           </Bottom>
         </Post>
       </Content>

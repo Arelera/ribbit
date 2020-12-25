@@ -33,8 +33,12 @@ const App = () => {
       {modal && <Modal {...modal} />}
       <Navbar showUserForm={showUserForm} />
       <Switch>
-        <Route path="/" exact component={MainContent} />
-        <Route path="/r/:subribbit" exact component={SubribbitPage} />
+        <Route path="/" exact>
+          <MainContent showUserForm={showUserForm} />
+        </Route>
+        <Route path="/r/:subribbit" exact>
+          <SubribbitPage showUserForm={showUserForm} />
+        </Route>
         <Route
           path={['/submit', '/r/:subribbit/submit']}
           component={PostForm}

@@ -22,6 +22,10 @@ const Poster = styled.span`
   margin-right: 3px;
 `;
 
+const EditedAt = styled.span`
+  font-style: italic;
+`;
+
 const TopBar = ({ post, currDate }) => {
   return (
     <Top>
@@ -32,7 +36,12 @@ const TopBar = ({ post, currDate }) => {
       <Link to={`/user/${post.username}`}>
         <Poster>u/{post.username}</Poster>
       </Link>
-      <span>{formatDistance(new Date(post.createdAt), currDate)} ago</span>
+      <span>{formatDistance(new Date(post.createdAt), currDate)} ago</span>{' '}
+      {post.editedAt && (
+        <EditedAt>
+          · edited {formatDistance(new Date(post.editedAt), currDate)} ago
+        </EditedAt>
+      )}
     </Top>
   );
 };

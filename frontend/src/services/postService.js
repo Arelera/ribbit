@@ -1,8 +1,11 @@
 import axios from 'axios';
 import { baseUrl } from './config';
 
-const getAll = async (params) => {
-  const response = await axios.get(`${baseUrl}/posts`, { params });
+const getAll = async (params, token) => {
+  const response = await axios.get(`${baseUrl}/posts`, {
+    params,
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return response.data;
 };
 
@@ -26,8 +29,8 @@ const createOne = async (post) => {
 const editOne = async (post, content, token) => {
   const response = await axios.patch(
     `${baseUrl}/posts/${post}`,
-    { content },
-    { headers: { Authorization: token } }
+    { content, editedAt: new Date().toISOString() },
+    { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;
 };
@@ -39,12 +42,24 @@ const deleteOne = async (post, token) => {
   return response.data;
 };
 
+const voteOn = async (post, isUpvote, token) => {
+  const response = await axios.post(
+    `${baseUrl}/posts/vote/${post}`,
+    { isUpvote },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return response.data;
+};
+
 const postService = {
   getAll,
   getById,
   createOne,
   editOne,
   deleteOne,
+  voteOn,
 };
 
 export default postService;

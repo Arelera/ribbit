@@ -16,8 +16,13 @@ const Div = styled.div`
   border-radius: 4px 0 0 4px;
 `;
 
-const Dot = styled.div`
-  color: ${({ theme }) => theme.gray0};
+const VoteCount = styled.div`
+  font-weight: 700;
+  ${({ theme }) =>
+    css`
+      color: ${theme.gray0};
+      font-size: ${theme.fontSmall};
+    `};
 `;
 
 const Icon = styled.div`
@@ -28,12 +33,14 @@ const UpvoteBtn = styled.button`
   background: transparent;
   border: none;
   border-radius: 2px;
-  ${({ theme }) =>
+  cursor: pointer;
+  outline: none;
+  ${(props) =>
     css`
-      color: ${theme.gray2};
+      color: ${props.userVote ? props.theme.prim1 : props.theme.gray2};
       :hover {
-        background: ${theme.gray3};
-        color: ${theme.prim1};
+        background: ${props.theme.gray3};
+        color: ${props.theme.prim1};
       }
     `};
 `;
@@ -41,26 +48,28 @@ const DownvoteBtn = styled.button`
   background: transparent;
   border: none;
   border-radius: 2px;
-  ${({ theme }) =>
+  cursor: pointer;
+  outline: none;
+  ${(props) =>
     css`
-      color: ${theme.gray2};
+      color: ${props.userVote ? props.theme.sec2 : props.theme.gray2};
       :hover {
-        background: ${theme.gray3};
-        color: ${theme.sec2};
+        background: ${props.theme.gray3};
+        color: ${props.theme.sec2};
       }
     `};
 `;
 
-const VoteBar = () => {
+const VoteBar = ({ votes, userVote, voteHandler }) => {
   return (
     <Div>
-      <UpvoteBtn>
+      <UpvoteBtn userVote={userVote === 1} onClick={() => voteHandler(1)}>
         <Icon>
           <UpvoteIcon />
         </Icon>
       </UpvoteBtn>
-      <Dot>•</Dot>
-      <DownvoteBtn>
+      <VoteCount>{votes || 0}</VoteCount>
+      <DownvoteBtn userVote={userVote === -1} onClick={() => voteHandler(-1)}>
         <Icon>
           <DownvoteIcon />
         </Icon>

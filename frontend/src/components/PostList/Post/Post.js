@@ -49,7 +49,13 @@ const TextContainer = styled.div`
 
 const P = styled.p`
   line-height: 21px;
-  padding: 12px 4px 12px 0;
+  padding: 12px 4px 4px 0;
+  :first-child {
+    padding-top: 0;
+  }
+  :last-child {
+    padding-bottom: 0;
+  }
   ${({ theme }) =>
     css`
       color: ${theme.gray0};
@@ -57,10 +63,14 @@ const P = styled.p`
     `}
 `;
 
-const Post = ({ post, currDate }) => {
+const Post = ({ post, currDate, voteHandler }) => {
   return (
     <Div>
-      <VoteBar />
+      <VoteBar
+        votes={post.votes}
+        userVote={post.isUpvote}
+        voteHandler={voteHandler}
+      />
       <Content>
         <TopBar post={post} currDate={currDate} />
         <Link to={`/r/${post.subribbit}/${post.id}`}>
@@ -71,7 +81,11 @@ const Post = ({ post, currDate }) => {
             <P key={i}>{p}</P>
           ))}
         </TextContainer>
-        <BottomBar postId={post.id} commentCount={post.commentCount} />
+        <BottomBar
+          postId={post.id}
+          sub={post.subribbit}
+          commentCount={post.commentCount}
+        />
       </Content>
     </Div>
   );

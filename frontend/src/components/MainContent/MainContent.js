@@ -11,10 +11,10 @@ const Main = styled.main`
   column-gap: 26px;
 `;
 
-const MainContent = () => {
+const MainContent = ({ showUserForm }) => {
   return (
     <Main>
-      <PostList />
+      <PostList showUserForm={showUserForm} />
       <Side />
     </Main>
   );

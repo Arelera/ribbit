@@ -91,7 +91,7 @@ const Comment = ({ comment, currDate }) => {
         </Content>
         <Bottom
           content={comment.content}
-          isMyComment={comment.creator === user.id}
+          isMyComment={comment.creator === user?.id}
           commentId={comment.id}
         />
       </Container>

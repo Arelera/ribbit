@@ -18,8 +18,7 @@ const Banner = styled.div`
 
 const Line = styled.div`
   height: 80px;
-  background: ${({ theme }) =>
-    `linear-gradient(135deg, ${theme.sec1}, ${theme.sec2})`};
+  background: ${({ theme }) => theme.sec2};
 `;
 
 const TopContainer = styled.div`
@@ -54,7 +53,7 @@ const Content = styled.div`
   column-gap: 26px;
 `;
 
-const SubribbitPage = () => {
+const SubribbitPage = ({ showUserForm }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const { subribbit } = useParams();
@@ -95,7 +94,7 @@ const SubribbitPage = () => {
         </TopContainer>
       </Banner>
       <Content>
-        <PostList />
+        <PostList showUserForm={showUserForm} />
         <SubPageAside info={info} />
       </Content>
     </Div>
