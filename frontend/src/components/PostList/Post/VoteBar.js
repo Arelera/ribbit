@@ -60,7 +60,7 @@ const DownvoteBtn = styled.button`
     `};
 `;
 
-const VoteBar = ({ votes, userVote, voteHandler }) => {
+const VoteBar = ({ points, userVote, voteHandler }) => {
   return (
     <Div>
       <UpvoteBtn userVote={userVote === 1} onClick={() => voteHandler(1)}>
@@ -68,7 +68,7 @@ const VoteBar = ({ votes, userVote, voteHandler }) => {
           <UpvoteIcon />
         </Icon>
       </UpvoteBtn>
-      <VoteCount>{votes || 0}</VoteCount>
+      <VoteCount>{points || 0}</VoteCount>
       <DownvoteBtn userVote={userVote === -1} onClick={() => voteHandler(-1)}>
         <Icon>
           <DownvoteIcon />

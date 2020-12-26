@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import { format } from 'date-fns';
 import CakeIcon from '../../icons/CakeIcon';
 import Button from '../reusable/Button';
+import { useHistory } from 'react-router-dom';
 
 const Aside = styled.aside`
   width: 312px;
@@ -54,6 +55,7 @@ const PostBtn = styled(Button)`
 `;
 
 const SubPageAside = ({ info }) => {
+  const history = useHistory();
   return (
     <Aside>
       <SubribbitInfo>
@@ -74,7 +76,9 @@ const SubPageAside = ({ info }) => {
               Created {format(new Date(info.createdAt), 'MMM dd, yyyy')}
             </p>
           </div>
-          <PostBtn>CREATE POST</PostBtn>
+          <PostBtn onClick={() => history.push(`/r/${info.name}/submit`)}>
+            CREATE POST
+          </PostBtn>
         </div>
       </SubribbitInfo>
     </Aside>

@@ -13,8 +13,14 @@ router.get('/refresh', async (req, res, next) => {
 
     const response = await client.query(
       `
-      SELECT id, username, email, "joinedSubribbits", "createdAt" FROM users
-      WHERE username = $1;
+      SELECT id, username, email, "joinedSubribbits", "createdAt",
+        SUM(pv."isUpvote") karma
+        FROM users u
+
+      LEFT JOIN "postVotes" pv ON u.id = pv.creator
+      
+      WHERE username = $1
+      GROUP BY u.id;
       `,
       [decodedUser.username]
     );
@@ -55,7 +61,7 @@ router.post('/signup', async (req, res, next) => {
       `
       INSERT INTO users (username, email, "passwordHash")
       VALUES ($1, $2, $3)
-      RETURNING username, email, "joinedSubribbits", "createdAt";
+      RETURNING id, username, email, "joinedSubribbits", "createdAt";
     `,
       [username, email, passwordHash]
     );
@@ -79,8 +85,14 @@ router.post('/login', async (req, res, next) => {
     // check if username exists
     const response = await client.query(
       `
-      SELECT id, "passwordHash", username, email, "joinedSubribbits", "createdAt" FROM users
-      WHERE username = $1;
+      SELECT id, "passwordHash", username, email, "joinedSubribbits", "createdAt",
+        SUM(pv."isUpvote") karma
+        FROM users u
+
+      LEFT JOIN "postVotes" pv ON u.id = pv.creator
+      
+      WHERE username = $1
+      GROUP BY u.id;
       `,
       [username]
     );

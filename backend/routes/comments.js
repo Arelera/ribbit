@@ -28,12 +28,10 @@ router.post('/:post', async (req, res, next) => {
   try {
     const { post } = req.params;
     const body = req.body;
-    console.log('YO: ', post, body);
 
     if (!body.comment) return res.send();
 
     const token = getTokenFrom(req);
-
     const decodedUser = jwt.verify(token, JWT_SECRET);
 
     const response = await client.query(

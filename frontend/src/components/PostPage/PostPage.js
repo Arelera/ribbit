@@ -6,6 +6,7 @@ import Comments from './Comments/Comments';
 import PostContent from './PostContent';
 import { useDispatch, useSelector } from 'react-redux';
 import { getComments } from '../../store/actions/comments';
+import { voteOnPost } from '../../store/actions/posts';
 
 const Div = styled.div`
   max-width: 1280px;
@@ -61,6 +62,19 @@ const PostPage = ({ showUserForm }) => {
     }
   }, [post, comments]);
 
+  const voteHandler = (post) => (isUpvote) => {
+    dispatch(voteOnPost(post.id, isUpvote, post.isUpvote)).then((res) => {
+      if (res === 'No user') {
+        return showUserForm('login');
+      }
+      setPost({
+        ...post,
+        points: +post.points + getVoteChange(post.points, isUpvote),
+        isUpvote,
+      });
+    });
+  };
+
   if (loading) return 'ok';
   return (
     <>
@@ -77,12 +91,23 @@ const PostPage = ({ showUserForm }) => {
             post={post}
             setPost={setPost}
             commentsLength={comments.length}
+            voteHandler={voteHandler}
           />
           <Comments showUserForm={showUserForm} comments={comments} />
         </Container>
       </Div>
     </>
   );
+};
+
+const getVoteChange = (oldVote, newVote) => {
+  if (oldVote && oldVote === newVote) {
+    return -newVote;
+  } else if (oldVote && oldVote !== newVote) {
+    return 2 * newVote;
+  } else {
+    return newVote;
+  }
 };
 
 export default PostPage;

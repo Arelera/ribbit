@@ -67,7 +67,7 @@ const Post = ({ post, currDate, voteHandler }) => {
   return (
     <Div>
       <VoteBar
-        votes={post.votes}
+        points={post.points}
         userVote={post.isUpvote}
         voteHandler={voteHandler}
       />

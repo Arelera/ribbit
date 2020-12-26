@@ -22,7 +22,7 @@ const reducer = (state = [], action) => {
         post.id === action.id
           ? {
               ...post,
-              votes: +post.votes + voteChange,
+              points: +post.points + voteChange,
               isUpvote: oldVote === newVote ? null : newVote,
             }
           : post

@@ -67,7 +67,7 @@ const EditedAt = styled.span`
   font-style: italic;
 `;
 
-const PostContent = ({ post, setPost, commentsLength }) => {
+const PostContent = ({ post, setPost, commentsLength, voteHandler }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const currDate = new Date();
@@ -89,7 +89,11 @@ const PostContent = ({ post, setPost, commentsLength }) => {
   return (
     <Div>
       <Content>
-        <VoteBar post={post} />
+        <VoteBar
+          points={post.points}
+          userVote={post.isUpvote}
+          voteHandler={voteHandler(post)}
+        />
         <Post>
           <Top>
             Posted by <Link to={`u/${post.username}`}>u/{post.username}</Link>{' '}

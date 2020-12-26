@@ -54,8 +54,7 @@ export const voteOnPost = (id, isUpvote, oldVote) => {
     if (!userJson) {
       return 'No user';
     }
-    // no await here because not getting anything from backend anyways
-    // and it will look fast on the frontend
+
     const { token } = JSON.parse(userJson);
     postService.voteOn(id, isUpvote, token);
     dispatch({ type: 'VOTE_POST', id, isUpvote, oldVote });

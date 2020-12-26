@@ -10,7 +10,14 @@ const getAll = async (params, token) => {
 };
 
 const getById = async (id) => {
-  const response = await axios.get(`${baseUrl}/posts/${id}`);
+  const userJson = localStorage.getItem('user');
+  if (!userJson) {
+    return 'No user';
+  }
+  const { token } = JSON.parse(userJson);
+  const response = await axios.get(`${baseUrl}/posts/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return response.data;
 };
 

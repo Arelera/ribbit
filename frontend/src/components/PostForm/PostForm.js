@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import postService from '../../services/postService';
 import Button from '../reusable/Button';
@@ -75,8 +75,9 @@ const PostButton = styled(Button)`
 
 const PostForm = () => {
   const history = useHistory();
+  const subribbit = useParams().subribbit;
 
-  const [sub, setSub] = useState('');
+  const [sub, setSub] = useState(subribbit || '');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 

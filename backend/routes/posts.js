@@ -17,90 +17,33 @@ router.get('/', async (req, res, next) => {
     }
     const isUser = !!decodedUser.id;
 
-    // TODO: clean this place up
+    let opts = '';
+    let arr = [];
 
     // if there is a timeStart, it means we sort by top
     if (subribbit && timeStart) {
-      const opts = isUser ? `LEFT JOIN "postVotes" pv2 ON p.id = pv2.post` : '';
-      const opts2 = isUser ? `AND pv2.creator = $4 OR pv2.creator IS NULL` : '';
-
-      const arr = isUser
-        ? [subribbit, timeStart, new Date(), decodedUser.id]
-        : [subribbit, timeStart, new Date()];
+      if (isUser) {
+        opts =
+          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $4 AND pv.post = p.id)';
+        arr = [subribbit, timeStart, new Date(), decodedUser.id];
+      } else {
+        arr = [subribbit, timeStart, new Date()];
+      }
 
       const response = await client.query(
         `
         SELECT p.id, subribbit, p.creator, title, p.content, p."createdAt", p."editedAt",
-          COUNT(c.id) "commentCount", SUM(pv."isUpvote") votes
-          ${isUser ? ', pv2."isUpvote"' : ''}
+          COUNT(c.id) "commentCount", u.username,
+          (SELECT SUM(pv."isUpvote") FROM "postVotes" pv WHERE pv.post = p.id) points
+          ${opts}
         FROM posts p
         
         JOIN users u ON p.creator = u.id
         LEFT JOIN comments c ON p.id = c.post
-        LEFT JOIN "postVotes" pv ON p.id = pv.post
-        ${opts}
 
         WHERE subribbit = $1 
           AND (p."createdAt" BETWEEN $2 AND $3) 
-          ${opts2}
         
-        GROUP BY p.id, u.username ${isUser ? ', pv2."isUpvote"' : ''}
-        ORDER BY p."createdAt" DESC;
-        `,
-        arr
-      );
-
-      return res.send(response.rows);
-    } else if (subribbit) {
-      const opts = isUser ? `LEFT JOIN "postVotes" pv2 ON p.id = pv2.post` : '';
-      const opts2 = isUser ? `AND pv2.creator = $2 OR pv2.creator IS NULL` : '';
-
-      const arr = isUser ? [subribbit, decodedUser.id] : [subribbit];
-      // get all posts by subribbit (default sort is by new)
-      const response = await client.query(
-        `
-        SELECT p.id, subribbit, p.creator, title, p.content, p."createdAt", p."editedAt",
-          COUNT(c.id) "commentCount", SUM(pv."isUpvote") votes
-          ${isUser ? ', pv2."isUpvote"' : ''}
-          FROM posts p
-          
-          JOIN users u ON p.creator = u.id
-          LEFT JOIN comments c ON p.id = c.post
-          LEFT JOIN "postVotes" pv ON p.id = pv.post
-          ${opts}
-
-        WHERE subribbit = $1 ${opts2}
-        
-        GROUP BY p.id, u.username ${isUser ? ', pv2."isUpvote"' : ''}
-        ORDER BY p."createdAt" DESC;
-        `,
-        arr
-      );
-
-      return res.send(response.rows);
-    } else if (!subribbit && timeStart) {
-      const opts = isUser ? `LEFT JOIN "postVotes" pv2 ON p.id = pv2.post` : '';
-      const opts2 = isUser ? `AND pv2.creator = $3 OR pv2.creator IS NULL` : '';
-
-      const arr = isUser
-        ? [timeStart, new Date(), decodedUser.id]
-        : [timeStart, new Date()];
-
-      // get all posts sorted
-      const response = await client.query(
-        `
-        SELECT p.id, subribbit, p.creator, title, p.content, p."createdAt", p."editedAt",
-          COUNT(c.id) "commentCount", SUM(pv."isUpvote") votes
-          ${isUser ? ', pv2."isUpvote"' : ''}
-        FROM posts p
-
-        JOIN users u ON p.creator = u.id
-        LEFT JOIN comments c ON p.id = c.post
-        LEFT JOIN "postVotes" pv ON p.id = pv.post
-        ${opts}
-
-        WHERE (p."createdAt" BETWEEN $1 AND $2) ${opts2}
-
         GROUP BY p.id, u.username
         ORDER BY p."createdAt" DESC;
         `,
@@ -108,27 +51,87 @@ router.get('/', async (req, res, next) => {
       );
 
       return res.send(response.rows);
+    } else if (subribbit) {
+      if (isUser) {
+        opts =
+          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $2 AND pv.post = p.id)';
+        arr = [subribbit, decodedUser.id];
+      } else {
+        arr = [subribbit];
+      }
+
+      // get all posts by subribbit (default sort is by new)
+      const response = await client.query(
+        `
+        SELECT p.id, subribbit, p.creator, title, p.content, p."createdAt", p."editedAt",
+          COUNT(c.id) "commentCount", u.username,
+          (SELECT SUM(pv."isUpvote") FROM "postVotes" pv WHERE pv.post = p.id) points
+          ${opts}
+          FROM posts p
+          
+        JOIN users u ON p.creator = u.id
+        LEFT JOIN comments c ON p.id = c.post
+          
+
+        WHERE subribbit = $1
+        
+        GROUP BY p.id, u.username
+        ORDER BY p."createdAt" DESC;
+        `,
+        arr
+      );
+
+      return res.send(response.rows);
+    } else if (!subribbit && timeStart) {
+      if (isUser) {
+        opts =
+          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $3 AND pv.post = p.id)';
+        arr = [timeStart, new Date(), decodedUser.id];
+      } else {
+        arr = [timeStart, new Date()];
+      }
+
+      // get all posts sorted
+      const response = await client.query(
+        `
+        SELECT p.id, subribbit, p.creator, title, p.content, p."createdAt", p."editedAt",
+          COUNT(c.id) "commentCount", u.username, 
+          (SELECT SUM(pv."isUpvote") FROM "postVotes" pv WHERE pv.post = p.id) points 
+          ${opts}
+        FROM posts p
+
+        JOIN users u ON p.creator = u.id
+        LEFT JOIN comments c ON p.id = c.post
+
+        WHERE (p."createdAt" BETWEEN $1 AND $2)
+
+        GROUP BY p.id, u.username 
+        ORDER BY p."createdAt" DESC;
+        `,
+        arr
+      );
+
+      return res.send(response.rows);
     } else if (!subribbit) {
-      const opts = isUser
-        ? `LEFT JOIN "postVotes" pv2 ON p.id = pv2.post 
-      WHERE pv2.creator = $1 OR pv2.creator IS NULL`
-        : '';
-      const arr = isUser ? [decodedUser.id] : [];
+      if (isUser) {
+        opts =
+          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $1 AND pv.post = p.id)';
+        arr = [decodedUser.id];
+      }
 
       // get all posts
       const response = await client.query(
         `
         SELECT p.id, subribbit, p.creator, title, p.content, p."createdAt", p."editedAt",
-          COUNT(c.id) "commentCount", u.username, SUM(pv."isUpvote") votes
-          ${isUser ? ', pv2."isUpvote"' : ''}
+          COUNT(c.id) "commentCount", u.username, 
+          (SELECT SUM(pv."isUpvote") FROM "postVotes" pv WHERE pv.post = p.id) points 
+          ${opts}
         FROM posts p
           
         JOIN users u ON p.creator = u.id
         LEFT JOIN comments c ON p.id = c.post
-        LEFT JOIN "postVotes" pv ON p.id = pv.post
-        ${opts}
 
-        GROUP BY p.id, u.username ${isUser ? ', pv2."isUpvote"' : ''}
+        GROUP BY p.id, u.username
         ORDER BY p."createdAt" DESC;
         `,
         arr
@@ -138,20 +141,40 @@ router.get('/', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}); // TODO: TODO: TODO: TODO: TODO:
 
 // get a post by id
 router.get('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
+    const token = getTokenFrom(req);
+
+    let decodedUser = {};
+    if (token) {
+      decodedUser = jwt.verify(token, JWT_SECRET);
+    }
+    const isUser = !!decodedUser.id;
+    let opts = '';
+
+    if (isUser) {
+      opts =
+        ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $2 AND pv.post = p.id)';
+      arr = [id, decodedUser.id];
+    } else {
+      arr = [id];
+    }
 
     const response = await client.query(
       `
-      SELECT p.id, subribbit, creator, title, content, p."createdAt", p."editedAt", u.username FROM posts p
+      SELECT p.id, subribbit, creator, title, content, p."createdAt", p."editedAt", u.username,
+      (SELECT SUM(pv."isUpvote") FROM "postVotes" pv WHERE pv.post = p.id) points
+      ${opts}
+      FROM posts p
+
       JOIN users u ON p.creator = u.id
       WHERE p.id = $1;
       `,
-      [id]
+      arr
     );
 
     res.send(response.rows[0]);
@@ -233,8 +256,6 @@ router.post('/vote/:id', async (req, res, next) => {
     const { isUpvote } = req.body;
     const token = getTokenFrom(req);
     const decodedUser = jwt.verify(token, JWT_SECRET);
-    console.log('ID: ', id);
-    console.log('DECDOD: ', decodedUser);
 
     // search if user voted on this post before
     const voteCheck = await client.query(
@@ -245,7 +266,6 @@ router.post('/vote/:id', async (req, res, next) => {
       [id, decodedUser.id]
     );
     const voted = voteCheck.rows[0]; // this is the old vote (if it exists)
-    console.log('VOTED: ', voted);
 
     // if voted and has same isUpvote, remove the old vote
     if (voted && voted.isUpvote === isUpvote) {
