@@ -35,7 +35,7 @@ const Icon = styled.span`
   color: inherit;
 `;
 
-const BottomBar = ({ postId, commentCount }) => {
+const BottomBar = ({ postId, usersPost, commentCount }) => {
   const dispatch = useDispatch();
 
   const deleteHandler = () => {
@@ -52,24 +52,26 @@ const BottomBar = ({ postId, commentCount }) => {
         </Link>
         {commentCount} Comments
       </Item>
-      <ElMenu
-        items={[
-          {
-            text: 'Delete',
-            onClick: () => {
-              dispatch({
-                type: 'SET_MODAL',
-                title: 'Delete post',
-                msg:
-                  "Are you sure you want to delete your post? You can't undo this.",
-                acceptHandler: deleteHandler,
-                acceptBtn: 'DELETE POST',
-                cancelBtn: 'CANCEL',
-              });
+      {usersPost && (
+        <ElMenu
+          items={[
+            {
+              text: 'Delete',
+              onClick: () => {
+                dispatch({
+                  type: 'SET_MODAL',
+                  title: 'Delete post',
+                  msg:
+                    "Are you sure you want to delete your post? You can't undo this.",
+                  acceptHandler: deleteHandler,
+                  acceptBtn: 'DELETE POST',
+                  cancelBtn: 'CANCEL',
+                });
+              },
             },
-          },
-        ]}
-      />
+          ]}
+        />
+      )}
     </Bottom>
   );
 };

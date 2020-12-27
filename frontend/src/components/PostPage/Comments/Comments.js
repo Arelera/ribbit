@@ -9,7 +9,7 @@ const Comments = ({ showUserForm }) => {
     <>
       <CommentInput showUserForm={showUserForm} />
       <Sorter />
-      <CommentList currDate={currDate} />
+      <CommentList showUserForm={showUserForm} currDate={currDate} />
     </>
   );
 };

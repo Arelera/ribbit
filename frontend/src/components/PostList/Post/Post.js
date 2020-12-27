@@ -63,7 +63,7 @@ const P = styled.p`
     `}
 `;
 
-const Post = ({ post, currDate, voteHandler }) => {
+const Post = ({ post, userId, currDate, voteHandler }) => {
   return (
     <Div>
       <VoteBar
@@ -84,6 +84,7 @@ const Post = ({ post, currDate, voteHandler }) => {
         <BottomBar
           postId={post.id}
           sub={post.subribbit}
+          usersPost={userId === post.creator}
           commentCount={post.commentCount}
         />
       </Content>

@@ -7,17 +7,23 @@ const ChildComments = styled.div`
   max-width: 100%;
 `;
 
-const CommentGroup = ({ comments, comment, currDate }) => {
+const CommentGroup = ({ comments, comment, voteHandler, currDate }) => {
   const childComments = comments.filter((c) => c.parentComment === comment.id);
   return (
     <>
-      <Comment comment={comment} comments={comments} currDate={currDate} />
+      <Comment
+        comment={comment}
+        comments={comments}
+        voteHandler={voteHandler(comment)}
+        currDate={currDate}
+      />
       {childComments.length > 0 && (
         <ChildComments>
           {childComments.map((child) => (
             <CommentGroup
               comment={child}
               comments={comments}
+              voteHandler={voteHandler}
               currDate={currDate}
               key={child.id}
             />

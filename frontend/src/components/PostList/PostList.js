@@ -17,6 +17,7 @@ const PostList = ({ showUserForm }) => {
   const { subribbit } = useParams();
   const sort = useQuery().get('sort');
   const t = useQuery().get('t'); // time range for top sort
+  const user = useSelector((state) => state.user);
   const posts = useSelector((state) => state.posts);
   const currDate = new Date();
 
@@ -39,6 +40,7 @@ const PostList = ({ showUserForm }) => {
       {posts.map((post) => (
         <Post
           post={post}
+          userId={user?.id}
           voteHandler={voteHandler(post)}
           currDate={currDate}
           key={post.id}

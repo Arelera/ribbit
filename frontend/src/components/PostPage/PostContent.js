@@ -6,7 +6,7 @@ import { formatDistance } from 'date-fns';
 import ElMenu from '../ElMenu/ElMenu';
 import { useState } from 'react';
 import PostEdit from './PostEdit';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deletePost, editPost } from '../../store/actions/posts';
 
 const Div = styled.div`
@@ -71,6 +71,7 @@ const PostContent = ({ post, setPost, commentsLength, voteHandler }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const currDate = new Date();
+  const user = useSelector((state) => state.user);
   const [editing, setEditing] = useState(false);
 
   const deleteHandler = () => {
@@ -119,12 +120,14 @@ const PostContent = ({ post, setPost, commentsLength, voteHandler }) => {
               <CommentIcon />
             </Icon>
             <span>{commentsLength} Comments</span>
-            <ElMenu
-              items={[
-                { text: 'Delete', onClick: deleteHandler },
-                { text: 'Edit', onClick: () => setEditing(!editing) },
-              ]}
-            />
+            {user?.id === post.creator && (
+              <ElMenu
+                items={[
+                  { text: 'Delete', onClick: deleteHandler },
+                  { text: 'Edit', onClick: () => setEditing(!editing) },
+                ]}
+              />
+            )}
           </Bottom>
         </Post>
       </Content>

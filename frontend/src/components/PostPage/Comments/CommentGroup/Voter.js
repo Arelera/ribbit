@@ -24,30 +24,40 @@ const Button = styled.button`
 `;
 
 const UpvoteBtn = styled(Button)`
-  :hover {
-    color: ${({ theme }) => theme.prim1};
-  }
+  outline: none;
+  ${(props) =>
+    css`
+      color: ${props.isUpvote ? props.theme.prim2 : props.theme.gray2};
+      :hover {
+        color: ${props.theme.prim1};
+      }
+    `}
 `;
 
 const DownvoteBtn = styled(Button)`
-  :hover {
-    color: ${({ theme }) => theme.sec2};
-  }
+  outline: none;
+  ${(props) =>
+    css`
+      color: ${props.isUpvote ? props.theme.sec2 : props.theme.gray2};
+      :hover {
+        color: ${props.theme.sec2};
+      }
+    `}
 `;
 
 const Icon = styled.div`
   height: 26px;
 `;
 
-const Voter = () => {
+const Voter = ({ isUpvote, voteHandler }) => {
   return (
     <Div>
-      <UpvoteBtn>
+      <UpvoteBtn isUpvote={isUpvote === 1} onClick={() => voteHandler(1)}>
         <Icon>
           <UpvoteIcon />
         </Icon>
       </UpvoteBtn>
-      <DownvoteBtn>
+      <DownvoteBtn isUpvote={isUpvote === -1} onClick={() => voteHandler(-1)}>
         <Icon>
           <DownvoteIcon />
         </Icon>

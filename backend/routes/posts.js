@@ -141,7 +141,7 @@ router.get('/', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}); // TODO: TODO: TODO: TODO: TODO:
+});
 
 // get a post by id
 router.get('/:id', async (req, res, next) => {
@@ -155,13 +155,12 @@ router.get('/:id', async (req, res, next) => {
     }
     const isUser = !!decodedUser.id;
     let opts = '';
+    let arr = [id];
 
     if (isUser) {
       opts =
         ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $2 AND pv.post = p.id)';
       arr = [id, decodedUser.id];
-    } else {
-      arr = [id];
     }
 
     const response = await client.query(
@@ -300,7 +299,7 @@ router.post('/vote/:id', async (req, res, next) => {
         [isUpvote, id, decodedUser.id]
       );
     }
-    res.send(voted);
+    res.send();
   } catch (error) {
     next(error);
   }

@@ -58,17 +58,18 @@ const P = styled.p`
   }
 `;
 
-const Comment = ({ comment, currDate }) => {
+const Comment = ({ comment, currDate, voteHandler }) => {
   const user = useSelector((state) => state.user);
+
   return (
     <Div>
-      <Voter />
+      <Voter isUpvote={comment.isUpvote} voteHandler={voteHandler} />
       <Container>
         <Top>
           <Link to={`/user/${comment.username}`}>
             <Poster>{comment.username}</Poster>
           </Link>
-          <Points> {comment.upvotes} points</Points>
+          <Points> {comment.points || 0} points</Points>
           <TimeAgo>
             {' '}
             · {formatDistance(new Date(comment.createdAt), currDate)} ago

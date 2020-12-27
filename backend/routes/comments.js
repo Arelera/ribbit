@@ -8,13 +8,28 @@ const { JWT_SECRET } = require('../config');
 router.get('/:post', async (req, res, next) => {
   try {
     const { post } = req.params;
+    const token = getTokenFrom(req);
+    let decodedUser = {};
+    if (token) {
+      decodedUser = jwt.verify(token, JWT_SECRET);
+    }
+    const isUser = !!decodedUser.id;
+
+    const opts = isUser
+      ? ', (SELECT "isUpvote" FROM "commentVotes" cv WHERE cv.comment = c.id AND cv.creator = $2)'
+      : '';
+    const arr = isUser ? [post, decodedUser.id] : [post];
     const response = await client.query(
       `
-      SELECT c.id, post, c."parentComment", c.creator, content, c."createdAt", "editedAt", u.username FROM comments c
+      SELECT c.id, post, c."parentComment", c.creator, content, c."createdAt", "editedAt", u.username,
+      (SELECT  SUM("isUpvote") FROM "commentVotes" WHERE comment = c.id) points
+      ${opts}
+      FROM comments c
+
       JOIN users u ON c.creator = u.id
       WHERE post = $1;
       `,
-      [post]
+      arr
     );
 
     res.send(response.rows);
@@ -92,6 +107,63 @@ router.delete('/:id', async (req, res, next) => {
     );
 
     res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+});
+
+// vote on a comment
+router.post('/vote/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { isUpvote } = req.body;
+    const token = getTokenFrom(req);
+    const decodedUser = jwt.verify(token, JWT_SECRET);
+
+    // search if user voted on this comment before
+    const voteCheck = await client.query(
+      `
+      SELECT * FROM "commentVotes"
+      WHERE comment = $1 AND creator = $2;
+      `,
+      [id, decodedUser.id]
+    );
+    const voted = voteCheck.rows[0]; // this is the old vote (if it exists)
+
+    // if voted and has same isUpvote, remove the old vote
+    if (voted && voted.isUpvote === isUpvote) {
+      response = await client.query(
+        `
+        DELETE FROM "commentVotes"
+        WHERE comment = $1 AND creator = $2;
+        `,
+        [voted.comment, decodedUser.id]
+      );
+    }
+    // if voted but has different isUpvote, update the old vote
+    else if (voted && voted.isUpvote !== isUpvote) {
+      response = await client.query(
+        `
+        UPDATE "commentVotes"
+        SET "isUpvote" = $1
+        WHERE comment = $2 AND creator = $3
+        RETURNING *;
+        `,
+        [isUpvote, voted.comment, decodedUser.id]
+      );
+    }
+    // if did not vote, just add the vote
+    else if (!voted) {
+      response = await client.query(
+        `
+        INSERT INTO "commentVotes" ("isUpvote", comment, creator)
+        VALUES ($1, $2, $3)
+        RETURNING *; 
+        `,
+        [isUpvote, id, decodedUser.id]
+      );
+    }
+    res.send(voted);
   } catch (error) {
     next(error);
   }

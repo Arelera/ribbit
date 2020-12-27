@@ -1,6 +1,6 @@
 const getTokenFrom = (req) => {
   const auth = req.get('Authorization');
-  if (!auth.includes('undefined') && auth.startsWith('Bearer ')) {
+  if (auth && !auth.includes('undefined') && auth.startsWith('Bearer ')) {
     return auth.substring(7);
   }
   return null;

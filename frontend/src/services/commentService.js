@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { baseUrl } from './config';
 
-const getByPost = async (post) => {
-  const resposne = await axios.get(`${baseUrl}/comments/${post}`);
+const getByPost = async (post, token) => {
+  const resposne = await axios.get(`${baseUrl}/comments/${post}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return resposne.data;
 };
 
@@ -28,11 +30,21 @@ const deleteOne = async (id, token) => {
   return response.data;
 };
 
+const voteOn = async (id, isUpvote, token) => {
+  const response = await axios.post(
+    `${baseUrl}/comments/vote/${id}`,
+    { isUpvote },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.data;
+};
+
 const commentService = {
   getByPost,
   commentOn,
   editOne,
   deleteOne,
+  voteOn,
 };
 
 export default commentService;

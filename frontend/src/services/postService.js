@@ -11,10 +11,10 @@ const getAll = async (params, token) => {
 
 const getById = async (id) => {
   const userJson = localStorage.getItem('user');
-  if (!userJson) {
-    return 'No user';
+  let token;
+  if (userJson) {
+    token = JSON.parse(userJson).token;
   }
-  const { token } = JSON.parse(userJson);
   const response = await axios.get(`${baseUrl}/posts/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -53,9 +53,7 @@ const voteOn = async (post, isUpvote, token) => {
   const response = await axios.post(
     `${baseUrl}/posts/vote/${post}`,
     { isUpvote },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
+    { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;
 };

@@ -72,7 +72,7 @@ const Sorter = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const query = useQuery().get('sort');
-  const [sortBy, setSortBy] = useState(query || 'new');
+  const [sortBy, setSortBy] = useState(query || 'top');
   const [expanded, setExpanded, expandedRef] = useVisible(false);
 
   const sortChangeHandler = (param) => {

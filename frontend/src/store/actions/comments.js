@@ -2,7 +2,13 @@ import commentService from '../../services/commentService';
 
 export const getComments = (id) => {
   return async (dispatch) => {
-    const comments = await commentService.getByPost(id);
+    const userJson = localStorage.getItem('user');
+
+    let token;
+    if (userJson) {
+      token = JSON.parse(userJson).token;
+    }
+    const comments = await commentService.getByPost(id, token);
 
     dispatch({
       type: 'GET_COMMENTS',
@@ -20,7 +26,11 @@ export const sortComments = (sortBy) => {
 
 export const addComment = (id, comment, parentComment) => {
   return async (dispatch) => {
-    const { username, token } = JSON.parse(localStorage.getItem('user'));
+    const userJson = localStorage.getItem('user');
+    if (!userJson) {
+      return;
+    }
+    const { username, token } = JSON.parse(userJson);
     const newComment = await commentService.commentOn(
       id,
       { comment, parentComment },
@@ -28,7 +38,7 @@ export const addComment = (id, comment, parentComment) => {
     );
     dispatch({
       type: 'ADD_COMMENT',
-      comment: { ...newComment, username },
+      comment: { ...newComment, points: 0, username },
     });
   };
 };
@@ -56,5 +66,18 @@ export const deleteComment = (id) => {
       type: 'DELETE_COMMENT',
       id,
     });
+  };
+};
+
+export const voteOnComment = (id, isUpvote, oldVote) => {
+  return async (dispatch) => {
+    const userJson = localStorage.getItem('user');
+    if (!userJson) {
+      return 'No user';
+    }
+    const { token } = JSON.parse(userJson);
+
+    commentService.voteOn(id, isUpvote, token);
+    dispatch({ type: 'VOTE_COMMENT', id, isUpvote, oldVote });
   };
 };
