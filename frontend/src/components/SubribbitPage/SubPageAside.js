@@ -11,6 +11,9 @@ const Aside = styled.aside`
     css`
       color: ${theme.gray0};
       font-size: ${theme.fontMed};
+      ${theme.tablet} {
+        display: none;
+      }
     `};
 `;
 

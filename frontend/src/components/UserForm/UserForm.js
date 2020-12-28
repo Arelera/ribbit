@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import XIcon from '../../icons/XIcon';
 import Login from './Login';
 import Signup from './Signup';
@@ -22,8 +22,11 @@ const Div = styled.div`
   height: 650px;
   border-radius: 4px;
   display: flex;
-  margin: 2rem;
-  background: ${({ theme }) => theme.gray4};
+  margin: 32px;
+  ${({ theme }) =>
+    css`
+      background: ${theme.gray4};
+    `};
 `;
 
 const FormBox = styled.div`

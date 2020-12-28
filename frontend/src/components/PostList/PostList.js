@@ -10,6 +10,9 @@ import PostSorter from './PostSorter/PostSorter';
 
 const Div = styled.div`
   width: 640px;
+  ${({ theme }) => theme.tablet} {
+    width: 100%;
+  }
 `;
 
 const PostList = ({ showUserForm }) => {

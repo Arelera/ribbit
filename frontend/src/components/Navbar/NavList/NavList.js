@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import CreateIcon from '../../../icons/CreateIcon';
 import GraphUpIcon from '../../../icons/GraphUpIcon';
 import MessageIcon from '../../../icons/MessageIcon';
@@ -21,13 +21,25 @@ const LinkItem = styled.a`
     margin-left: 0px;
   }
 
-  color: ${({ theme }) => theme.gray0};
   width: 32px;
   height: 32px;
   padding: 8px;
-  :hover {
-    background: ${({ theme }) => theme.gray3};
-  }
+
+  ${({ theme }) =>
+    css`
+      color: ${theme.gray0};
+      :hover {
+        background: ${theme.gray3};
+      }
+      ${theme.tablet} {
+        :first-child {
+          display: none;
+        }
+      }
+      ${theme.tabletS} {
+        display: none;
+      }
+    `}
 `;
 
 const Icon = styled.div`

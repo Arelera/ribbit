@@ -37,12 +37,26 @@ const Button = styled.button`
       border-color: ${props.expanded ? props.theme.postBorder : 'transparent'};
       :hover {
         border-color: ${props.theme.postBorder};
+      }
+      ${props.theme.tablet} {
+        max-width: 100px;
+        padding: 0;
+      }
     `}
 `;
 
 const Text = styled.h2`
   font-weight: 600;
-  font-size: ${({ theme }) => theme.fontMed};
+  ${({ theme }) =>
+    css`
+      font-size: ${theme.fontMed};
+      ${theme.tablet} {
+        width: 60px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    `};
 `;
 
 const ChevBot = styled.div`
@@ -58,7 +72,13 @@ const Left = styled.div`
 const Icon = styled.div`
   height: 22px;
   margin-right: 8px;
-  color: ${({ theme }) => theme.sec2};
+  ${({ theme }) =>
+    css`
+      color: ${theme.sec2};
+      ${theme.tablet} {
+        margin-right: 0;
+      }
+    `};
 `;
 
 const NavMenu = () => {

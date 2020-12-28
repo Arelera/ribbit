@@ -2,6 +2,9 @@ import styled, { css } from 'styled-components';
 
 export const Form = styled.form`
   width: 280px;
+  ${({ theme }) => theme.tablet} {
+    width: 100%;
+  }
 `;
 
 export const Title = styled.h2`

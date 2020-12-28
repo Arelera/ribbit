@@ -10,6 +10,9 @@ import { setUser } from '../../../store/actions/user';
 const Aside = styled.aside`
   flex-shrink: 0;
   width: 312px;
+  ${({ theme }) => theme.tablet} {
+    display: none;
+  }
 `;
 const Box = styled.div`
   border-radius: 4px;

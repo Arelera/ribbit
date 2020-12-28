@@ -4,6 +4,9 @@ import Button2 from '../../reusable/Button2';
 
 const Div = styled.div`
   display: flex;
+  ${({ theme }) => theme.tabletS} {
+    display: none;
+  }
 `;
 
 const LoginBtn = styled(Button2)`

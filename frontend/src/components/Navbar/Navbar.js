@@ -24,6 +24,9 @@ const Nav = styled.nav`
       color: ${theme.gray0};
       background-color: ${theme.gray4};
       border-bottom: 1px solid ${theme.postBorder};
+      ${theme.mobileL} {
+        padding: 0 10px;
+      }
     `}
 `;
 

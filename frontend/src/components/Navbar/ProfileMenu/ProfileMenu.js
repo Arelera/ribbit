@@ -39,15 +39,23 @@ const ChevBot = styled.div`
 `;
 
 const LeftSide = styled.div`
+  width: 177px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 177px;
+
+  ${({ theme }) => theme.laptop} {
+    max-width: 60px;
+  }
 `;
 
 const Name = styled.span`
-  font-family: 'IBM Plex Sans';
+  width: 100%;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
 
   ${({ theme }) =>
     css`
@@ -63,6 +71,9 @@ const Karma = styled.span`
     css`
       color: ${theme.gray1};
       font-size: ${theme.fontSmall};
+      ${theme.laptop} {
+        display: none;
+      }
     `};
 `;
 
@@ -70,7 +81,7 @@ const IconKarma = styled.div`
   display: inline-block;
   height: 10px;
   margin-right: 2px;
-  color: #2dc7ff;
+  color: ${({ theme }) => theme.prim2};
 `;
 
 const IconProfile = styled.div`

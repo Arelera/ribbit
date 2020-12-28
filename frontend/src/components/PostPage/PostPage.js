@@ -30,6 +30,7 @@ const Subribbit = styled.span`
   font-weight: 700;
   font-size: 22px;
   color: ${({ theme }) => theme.white1};
+  margin-left: 24px;
 `;
 
 const Container = styled.div`

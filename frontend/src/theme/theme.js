@@ -1,9 +1,9 @@
 const Theme = {
-  prim1: '#2DC7FF',
-  prim2: '#00ABE7',
-  prim3: '#0081AF',
-  sec1: '#EAD2AC',
-  sec2: '#EABA6B',
+  prim1: '#00CC99',
+  prim2: '#00A877',
+  prim3: '#40826D',
+  sec1: '#FF7F50',
+  sec2: '#D68A59',
 
   postBorder: '#343536',
 
@@ -27,6 +27,11 @@ const Theme = {
   box() {
     return `background: ${this.gray4}; border: 1px solid ${this.postBorder};`;
   },
+
+  mobileL: '@media screen and (max-width: 425px)',
+  tabletS: '@media screen and (max-width: 600px)',
+  tablet: '@media screen and (max-width: 768px)',
+  laptop: '@media screen and (max-width: 1024px)',
 };
 
 export default Theme;

@@ -6,6 +6,9 @@ const Div = styled.div`
   margin: 0 16px;
   width: 100%;
   position: relative;
+  ${({ theme }) => theme.mobileL} {
+    margin: 0 0 0 8px;
+  }
 `;
 
 const Input = styled.input`

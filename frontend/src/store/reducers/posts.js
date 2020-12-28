@@ -1,7 +1,10 @@
 const reducer = (state = [], action) => {
   switch (action.type) {
     case 'GET_ALL_POSTS':
-      return action.posts;
+      if (action.page === 0) {
+        return action.posts;
+      }
+      return [...state, ...action.posts];
     case 'GET_POST_BY_SUB':
       return action.post;
     case 'DELETE_POST':

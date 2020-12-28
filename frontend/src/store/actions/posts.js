@@ -1,7 +1,7 @@
 import { sub } from 'date-fns';
 import postService from '../../services/postService';
 
-export const getAllPosts = ({ subribbit, sort, t }) => {
+export const getAllPosts = ({ subribbit, t, page }) => {
   return async (dispatch) => {
     let [timeStart, now] = [null, new Date()];
 
@@ -19,14 +19,15 @@ export const getAllPosts = ({ subribbit, sort, t }) => {
     const userJson = localStorage.getItem('user');
     if (userJson) {
       const { token } = JSON.parse(userJson);
-      posts = await postService.getAll({ subribbit, sort, timeStart }, token);
+      posts = await postService.getAll({ subribbit, timeStart, page }, token);
     } else {
-      posts = await postService.getAll({ subribbit, sort, timeStart });
+      posts = await postService.getAll({ subribbit, timeStart, page });
     }
 
     dispatch({
       type: 'GET_ALL_POSTS',
       posts,
+      page,
     });
   };
 };
