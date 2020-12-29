@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4MTRhMzgwLTk4ZTEtNGE5ZS1hYmQ1LTZiZjUwMDVjMjFlNCIsInVzZXJuYW1lIjoiZG9nIiwiaWF0IjoxNjA4NDAyNzgyfQ.ZU-R058ov5ZQHhq11uTdghCNw_tkbuqLsbLZWXu9okI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZkZGM5OGMxLWVjZjEtNGNmOS04ZDYwLTdhNmViOTBiOWRjMCIsInVzZXJuYW1lIjoicXdlIiwiZW1haWwiOiJxd2VAZy5jIiwiam9pbmVkU3VicmliYml0cyI6Int9IiwiY3JlYXRlZEF0IjoiMjAyMC0xMi0yNlQwNjozODo0MS4xNzVaIiwia2FybWEiOiIxIiwiaWF0IjoxNjA5MTc5MDIzfQ.L5aQ2s1l4DJgyQGOE6SxMSiy9K6DIBrhPF7deqxyWb0
 
 {
-  "sub": "qwe",
-  "title": "Firsttt titleee",
-  "content": "Get the helll out of my faceee"
+  "sub": "QWEsLair",
+  "title": "Post 22",
+  "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 }

@@ -7,7 +7,7 @@ const getTokenFrom = require('../helpers/getTokenFrom');
 // get posts by params
 router.get('/', async (req, res, next) => {
   try {
-    const { subribbit, timeStart } = req.query;
+    const { subribbit, timeStart, page } = req.query;
 
     const token = getTokenFrom(req);
     let decodedUser = {};
@@ -18,34 +18,42 @@ router.get('/', async (req, res, next) => {
     const isUser = !!decodedUser.id;
 
     let opts = '';
-    let arr = [];
+    const postLimit = 5; // the number of posts that will be fetched every time
+    let arr = [page * postLimit];
 
     // if there is a timeStart, it means we sort by top
     if (subribbit && timeStart) {
       if (isUser) {
         opts =
-          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $4 AND pv.post = p.id)';
-        arr = [subribbit, timeStart, new Date(), decodedUser.id];
+          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $5 AND pv.post = p.id)';
+        arr = [
+          page * postLimit,
+          subribbit,
+          timeStart,
+          new Date(),
+          decodedUser.id,
+        ];
       } else {
-        arr = [subribbit, timeStart, new Date()];
+        arr = [page * postLimit, subribbit, timeStart, new Date()];
       }
 
       const response = await client.query(
         `
         SELECT p.id, subribbit, p.creator, title, p.content, p."createdAt", p."editedAt",
           COUNT(c.id) "commentCount", u.username,
-          (SELECT SUM(pv."isUpvote") FROM "postVotes" pv WHERE pv.post = p.id) points
+          COALESCE((SELECT SUM(pv."isUpvote") FROM "postVotes" pv WHERE pv.post = p.id), 0) points
           ${opts}
         FROM posts p
         
         JOIN users u ON p.creator = u.id
         LEFT JOIN comments c ON p.id = c.post
 
-        WHERE subribbit = $1 
-          AND (p."createdAt" BETWEEN $2 AND $3) 
+        WHERE subribbit = $2 
+          AND (p."createdAt" BETWEEN $3 AND $4) 
         
         GROUP BY p.id, u.username
-        ORDER BY p."createdAt" DESC;
+        ORDER BY points DESC, p.id ASC
+        LIMIT ${postLimit} OFFSET $1;
         `,
         arr
       );
@@ -54,10 +62,10 @@ router.get('/', async (req, res, next) => {
     } else if (subribbit) {
       if (isUser) {
         opts =
-          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $2 AND pv.post = p.id)';
-        arr = [subribbit, decodedUser.id];
+          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $3 AND pv.post = p.id)';
+        arr = [page * postLimit, subribbit, decodedUser.id];
       } else {
-        arr = [subribbit];
+        arr = [page * postLimit, subribbit];
       }
 
       // get all posts by subribbit (default sort is by new)
@@ -73,10 +81,11 @@ router.get('/', async (req, res, next) => {
         LEFT JOIN comments c ON p.id = c.post
           
 
-        WHERE subribbit = $1
+        WHERE subribbit = $2
         
         GROUP BY p.id, u.username
-        ORDER BY p."createdAt" DESC;
+        ORDER BY p."createdAt" DESC
+        LIMIT ${postLimit} OFFSET $1;
         `,
         arr
       );
@@ -85,28 +94,29 @@ router.get('/', async (req, res, next) => {
     } else if (!subribbit && timeStart) {
       if (isUser) {
         opts =
-          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $3 AND pv.post = p.id)';
-        arr = [timeStart, new Date(), decodedUser.id];
+          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $4 AND pv.post = p.id)';
+        arr = [page * postLimit, timeStart, new Date(), decodedUser.id];
       } else {
-        arr = [timeStart, new Date()];
+        arr = [page * postLimit, timeStart, new Date()];
       }
-
+      console.log('Arr: ', arr);
       // get all posts sorted
       const response = await client.query(
         `
         SELECT p.id, subribbit, p.creator, title, p.content, p."createdAt", p."editedAt",
           COUNT(c.id) "commentCount", u.username, 
-          (SELECT SUM(pv."isUpvote") FROM "postVotes" pv WHERE pv.post = p.id) points 
+          COALESCE((SELECT SUM(pv."isUpvote") FROM "postVotes" pv WHERE pv.post = p.id), 0) points 
           ${opts}
         FROM posts p
 
         JOIN users u ON p.creator = u.id
         LEFT JOIN comments c ON p.id = c.post
 
-        WHERE (p."createdAt" BETWEEN $1 AND $2)
+        WHERE (p."createdAt" BETWEEN $2 AND $3)
 
         GROUP BY p.id, u.username 
-        ORDER BY p."createdAt" DESC;
+        ORDER BY points DESC, p.id ASC
+        LIMIT ${postLimit} OFFSET $1;
         `,
         arr
       );
@@ -115,8 +125,8 @@ router.get('/', async (req, res, next) => {
     } else if (!subribbit) {
       if (isUser) {
         opts =
-          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $1 AND pv.post = p.id)';
-        arr = [decodedUser.id];
+          ', (SELECT "isUpvote" FROM "postVotes" pv WHERE pv.creator = $2 AND pv.post = p.id)';
+        arr = [page * postLimit, decodedUser.id];
       }
 
       // get all posts
@@ -132,10 +142,12 @@ router.get('/', async (req, res, next) => {
         LEFT JOIN comments c ON p.id = c.post
 
         GROUP BY p.id, u.username
-        ORDER BY p."createdAt" DESC;
+        ORDER BY p."createdAt" DESC
+        LIMIT ${postLimit} OFFSET $1;
         `,
         arr
       );
+      console.log('sending posts len: ', response.rows.length);
       return res.send(response.rows);
     }
   } catch (error) {

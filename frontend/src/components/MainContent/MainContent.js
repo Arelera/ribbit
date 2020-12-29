@@ -9,6 +9,9 @@ const Main = styled.main`
   display: flex;
   justify-content: center;
   column-gap: 26px;
+  ${({ theme }) => theme.mobileL} {
+    padding: 20px 12px;
+  }
 `;
 
 const MainContent = ({ showUserForm }) => {

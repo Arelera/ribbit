@@ -1,6 +1,12 @@
 import { sub } from 'date-fns';
 import postService from '../../services/postService';
 
+export const clearPosts = () => {
+  return {
+    type: 'CLEAR_POSTS',
+  };
+};
+
 export const getAllPosts = ({ subribbit, t, page }) => {
   return async (dispatch) => {
     let [timeStart, now] = [null, new Date()];
@@ -22,6 +28,11 @@ export const getAllPosts = ({ subribbit, t, page }) => {
       posts = await postService.getAll({ subribbit, timeStart, page }, token);
     } else {
       posts = await postService.getAll({ subribbit, timeStart, page });
+    }
+
+    // if no posts come back, it means we got all of em
+    if (posts.length === 0) {
+      return 'done';
     }
 
     dispatch({

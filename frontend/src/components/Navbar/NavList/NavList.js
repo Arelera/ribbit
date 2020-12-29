@@ -74,7 +74,7 @@ const items = [
     icon: MessageIcon,
   },
   {
-    link: '/',
+    link: '/submit',
     icon: CreateIcon,
   },
 ];

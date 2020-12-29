@@ -9,6 +9,8 @@ const reducer = (state = [], action) => {
       return action.post;
     case 'DELETE_POST':
       return state.filter((post) => post.id !== action.id);
+    case 'CLEAR_POSTS':
+      return [];
     case 'VOTE_POST':
       const oldVote = action.oldVote;
       const newVote = action.isUpvote;

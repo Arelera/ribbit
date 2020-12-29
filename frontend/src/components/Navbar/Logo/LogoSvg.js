@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const DivCircle = styled.div`
   border-radius: 50%;
-  background: #fff;
+  background: ${({ theme }) => theme.gray0};
   height: 32px;
   width: 32px;
 `;
