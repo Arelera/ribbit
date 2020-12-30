@@ -70,8 +70,8 @@ const PostPage = ({ showUserForm }) => {
       }
       setPost({
         ...post,
-        points: +post.points + getVoteChange(post.points, isUpvote),
-        isUpvote,
+        points: +post.points + getVoteChange(post.isUpvote, isUpvote),
+        isUpvote: post.isUpvote === isUpvote ? null : isUpvote,
       });
     });
   };

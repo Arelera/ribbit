@@ -8,16 +8,16 @@ const getTokenFrom = require('../helpers/getTokenFrom');
 // refresh token
 router.get('/refresh', async (req, res, next) => {
   try {
+    console.log('Refr');
     const oldToken = getTokenFrom(req);
     const decodedUser = jwt.verify(oldToken, JWT_SECRET);
 
     const response = await client.query(
       `
       SELECT id, username, email, "joinedSubribbits", "createdAt",
-        SUM(pv."isUpvote") karma
+        (SELECT SUM("isUpvote") FROM "postVotes" pv WHERE u.id = pv.creator) + 
+        (SELECT SUM("isUpvote") FROM "commentVotes" cv WHERE u.id = cv.creator) karma
         FROM users u
-
-      LEFT JOIN "postVotes" pv ON u.id = pv.creator
       
       WHERE username = $1
       GROUP BY u.id;
@@ -86,10 +86,9 @@ router.post('/login', async (req, res, next) => {
     const response = await client.query(
       `
       SELECT id, "passwordHash", username, email, "joinedSubribbits", "createdAt",
-        SUM(pv."isUpvote") karma
+        (SELECT SUM("isUpvote") FROM "postVotes" pv WHERE u.id = pv.creator) + 
+        (SELECT SUM("isUpvote") FROM "commentVotes" cv WHERE u.id = cv.creator) karma
         FROM users u
-
-      LEFT JOIN "postVotes" pv ON u.id = pv.creator
       
       WHERE username = $1
       GROUP BY u.id;
