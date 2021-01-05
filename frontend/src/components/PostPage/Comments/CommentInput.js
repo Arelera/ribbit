@@ -69,7 +69,7 @@ const SignupBtn = styled(Button)`
   padding: 3px 16px;
 `;
 
-const CommentInput = ({ showUserForm }) => {
+const CommentInput = ({ isLoggedIn }) => {
   const dispatch = useDispatch();
   const { id } = useParams(); // post id
   const user = useSelector((state) => state.user);
@@ -98,10 +98,8 @@ const CommentInput = ({ showUserForm }) => {
         <NoUserBox>
           <NoUserText>Log in or sign up to leave a comment</NoUserText>
           <div>
-            <LoginBtn onClick={() => showUserForm('login')}>LOG IN</LoginBtn>
-            <SignupBtn onClick={() => showUserForm('signup')}>
-              SIGN UP
-            </SignupBtn>
+            <LoginBtn onClick={() => isLoggedIn('login')}>LOG IN</LoginBtn>
+            <SignupBtn onClick={() => isLoggedIn('signup')}>SIGN UP</SignupBtn>
           </div>
         </NoUserBox>
       )}

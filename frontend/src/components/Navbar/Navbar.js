@@ -30,7 +30,7 @@ const Nav = styled.nav`
     `}
 `;
 
-const Navbar = ({ showUserForm }) => {
+const Navbar = ({ isLoggedIn }) => {
   const user = useSelector((state) => state.user);
 
   return (
@@ -40,8 +40,8 @@ const Navbar = ({ showUserForm }) => {
       </Link>
       {user && <NavMenu />}
       <Search />
-      {user ? <NavList /> : <SignLog showUserForm={showUserForm} />}
-      <ProfileMenu showUserForm={showUserForm} />
+      {user ? <NavList /> : <SignLog isLoggedIn={isLoggedIn} />}
+      <ProfileMenu isLoggedIn={isLoggedIn} />
     </Nav>
   );
 };

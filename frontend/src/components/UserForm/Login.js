@@ -11,7 +11,7 @@ import {
   Error,
 } from './components';
 
-const Login = ({ showUserForm }) => {
+const Login = ({ isLoggedIn }) => {
   const dispatch = useDispatch();
   const error = useSelector((state) => state.error);
   const [username, setUsername] = useState('');
@@ -21,7 +21,7 @@ const Login = ({ showUserForm }) => {
     e.preventDefault();
     dispatch(loginUser({ username, password })).then((res) => {
       if (!res?.error) {
-        showUserForm();
+        isLoggedIn(false);
       }
     });
   };
@@ -51,7 +51,7 @@ const Login = ({ showUserForm }) => {
       <SubmitBtn type="submit">LOG IN</SubmitBtn>
       <Bottom>
         New to Ribbit?{' '}
-        <SwitchButton type="button" onClick={() => showUserForm('signup')}>
+        <SwitchButton type="button" onClick={() => isLoggedIn('signup')}>
           SIGN UP
         </SwitchButton>
       </Bottom>

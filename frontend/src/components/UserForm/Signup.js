@@ -11,7 +11,7 @@ import {
   Error,
 } from './components';
 
-const Signup = ({ showUserForm }) => {
+const Signup = ({ isLoggedIn }) => {
   const dispatch = useDispatch();
   const error = useSelector((state) => state.error);
   const [username, setUsername] = useState('');
@@ -26,7 +26,7 @@ const Signup = ({ showUserForm }) => {
     dispatch(signupUser({ username, email, password, passwordRepeat })).then(
       (res) => {
         if (!res?.error) {
-          showUserForm();
+          isLoggedIn(false);
         }
       }
     );
@@ -75,7 +75,7 @@ const Signup = ({ showUserForm }) => {
       <SubmitBtn>SIGN UP</SubmitBtn>
       <Bottom>
         Already have an account?{' '}
-        <SwitchButton type="button" onClick={() => showUserForm('login')}>
+        <SwitchButton type="button" onClick={() => isLoggedIn('login')}>
           LOG IN
         </SwitchButton>
       </Bottom>

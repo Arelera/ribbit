@@ -53,7 +53,7 @@ const Content = styled.div`
   column-gap: 26px;
 `;
 
-const SubribbitPage = ({ showUserForm }) => {
+const SubribbitPage = ({ isLoggedIn }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const { subribbit } = useParams();
@@ -68,9 +68,11 @@ const SubribbitPage = ({ showUserForm }) => {
   }, [subribbit]);
 
   const joinHandler = () => {
-    subribbitService.joinOne(info.name).then((res) => {
-      dispatch(setUser(res));
-    });
+    if (isLoggedIn()) {
+      subribbitService.joinOne(info.name).then((res) => {
+        dispatch(setUser(res));
+      });
+    }
   };
 
   const exitSubHandler = () => {
@@ -94,7 +96,7 @@ const SubribbitPage = ({ showUserForm }) => {
         </TopContainer>
       </Banner>
       <Content>
-        <PostList showUserForm={showUserForm} />
+        <PostList isLoggedIn={isLoggedIn} />
         <SubPageAside info={info} />
       </Content>
     </Div>

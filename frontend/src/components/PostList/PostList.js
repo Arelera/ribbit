@@ -20,7 +20,7 @@ const Observer = styled.div`
   width: 1px;
 `;
 
-const PostList = ({ showUserForm }) => {
+const PostList = ({ isLoggedIn }) => {
   const dispatch = useDispatch();
   const { subribbit } = useParams();
   const sort = useQuery().get('sort');
@@ -32,17 +32,15 @@ const PostList = ({ showUserForm }) => {
   const observeRef = useRef();
 
   const voteHandler = (post) => (isUpvote) => {
-    dispatch(voteOnPost(post.id, isUpvote, post.isUpvote)).then((res) => {
-      if (res === 'No user') {
-        showUserForm('login');
-      }
-    });
+    if (isLoggedIn()) {
+      dispatch(voteOnPost(post.id, isUpvote, post.isUpvote));
+    }
   };
 
   useEffect(() => {
     dispatch(clearPosts());
     setPage(0);
-  }, [sort, t, subribbit]);
+  }, [sort, t, subribbit, dispatch]);
 
   useEffect(() => {
     if (page !== 'done') {
@@ -74,7 +72,7 @@ const PostList = ({ showUserForm }) => {
       <PostFormRedirect />
       <PostSorter />
       {posts.map((post, i) => {
-        // plaching an observable between the posts
+        // placing an observable between the posts
         if (posts.length - 1 === i) {
           const items = (
             <Fragment key="observable">

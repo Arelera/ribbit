@@ -16,12 +16,21 @@ const App = () => {
   const dispatch = useDispatch();
   const [userFormVisible, setUserFormVisible, userFormRef] = useVisible();
   const [userFormType, setUserFormType] = useState('login');
+  const user = useSelector((state) => state.user);
   const modal = useSelector((state) => state.modal);
 
-  const showUserForm = (type) => {
-    if (!type) return setUserFormVisible(false);
-    setUserFormType(type);
-    setUserFormVisible(true);
+  // shows login form if not logged in
+  const isLoggedIn = (type = 'login') => {
+    if (!type) {
+      return setUserFormVisible(false);
+    }
+    if (!user) {
+      setUserFormType(type);
+      setUserFormVisible(true);
+      return false;
+    }
+    setUserFormVisible(false);
+    return true;
   };
 
   useEffect(() => {
@@ -31,13 +40,13 @@ const App = () => {
   return (
     <Router>
       {modal && <Modal {...modal} />}
-      <Navbar showUserForm={showUserForm} />
+      <Navbar isLoggedIn={isLoggedIn} />
       <Switch>
         <Route path="/" exact>
-          <MainContent showUserForm={showUserForm} />
+          <MainContent isLoggedIn={isLoggedIn} />
         </Route>
         <Route path="/r/:subribbit" exact>
-          <SubribbitPage showUserForm={showUserForm} />
+          <SubribbitPage isLoggedIn={isLoggedIn} />
         </Route>
         <Route
           path={['/submit', '/r/:subribbit/submit']}
@@ -45,13 +54,13 @@ const App = () => {
           exact
         />
         <Route path="/r/:subribbit/:id" exact>
-          <PostPage showUserForm={showUserForm} />
+          <PostPage isLoggedIn={isLoggedIn} />
         </Route>
         <Route path="/subribbits/create" exact component={SubribbitForm} />
       </Switch>
       {userFormVisible && (
         <UserForm
-          showUserForm={showUserForm}
+          isLoggedIn={isLoggedIn}
           userFormRef={userFormRef}
           userFormType={userFormType}
           login={true}

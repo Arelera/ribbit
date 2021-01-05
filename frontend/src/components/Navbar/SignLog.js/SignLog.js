@@ -20,11 +20,11 @@ const SignupBtn = styled(Button)`
   margin-left: 16px;
 `;
 
-const SignLog = ({ showUserForm }) => {
+const SignLog = ({ isLoggedIn }) => {
   return (
     <Div>
-      <LoginBtn onClick={() => showUserForm('login')}>LOG IN</LoginBtn>
-      <SignupBtn onClick={() => showUserForm('signup')}>SIGN UP</SignupBtn>
+      <LoginBtn onClick={() => isLoggedIn()}>LOG IN</LoginBtn>
+      <SignupBtn onClick={() => isLoggedIn('signup')}>SIGN UP</SignupBtn>
     </Div>
   );
 };

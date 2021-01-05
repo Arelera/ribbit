@@ -41,7 +41,7 @@ const Container = styled.div`
   background: ${({ theme }) => theme.gray4};
 `;
 
-const PostPage = ({ showUserForm }) => {
+const PostPage = ({ isLoggedIn }) => {
   const dispatch = useDispatch();
   const { id } = useParams(); // post id
   const [post, setPost] = useState();
@@ -64,16 +64,15 @@ const PostPage = ({ showUserForm }) => {
   }, [post, comments]);
 
   const voteHandler = (post) => (isUpvote) => {
-    dispatch(voteOnPost(post.id, isUpvote, post.isUpvote)).then((res) => {
-      if (res === 'No user') {
-        return showUserForm('login');
-      }
-      setPost({
-        ...post,
-        points: +post.points + getVoteChange(post.isUpvote, isUpvote),
-        isUpvote: post.isUpvote === isUpvote ? null : isUpvote,
+    if (isLoggedIn()) {
+      dispatch(voteOnPost(post.id, isUpvote, post.isUpvote)).then((res) => {
+        setPost({
+          ...post,
+          points: +post.points + getVoteChange(post.isUpvote, isUpvote),
+          isUpvote: post.isUpvote === isUpvote ? null : isUpvote,
+        });
       });
-    });
+    }
   };
 
   if (loading) return 'ok';
@@ -94,7 +93,7 @@ const PostPage = ({ showUserForm }) => {
             commentsLength={comments.length}
             voteHandler={voteHandler}
           />
-          <Comments showUserForm={showUserForm} comments={comments} />
+          <Comments isLoggedIn={isLoggedIn} comments={comments} />
         </Container>
       </Div>
     </>

@@ -14,10 +14,10 @@ const Main = styled.main`
   }
 `;
 
-const MainContent = ({ showUserForm }) => {
+const MainContent = ({ isLoggedIn }) => {
   return (
     <Main>
-      <PostList showUserForm={showUserForm} />
+      <PostList isLoggedIn={isLoggedIn} />
       <Side />
     </Main>
   );

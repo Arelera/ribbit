@@ -69,7 +69,7 @@ const ListItemButton = styled.button`
   }
 `;
 
-const ProfileMenuList = ({ user, showUserForm }) => {
+const ProfileMenuList = ({ user, isLoggedIn }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -103,7 +103,7 @@ const ProfileMenuList = ({ user, showUserForm }) => {
           </ListItemButton>
         </>
       ) : (
-        <ListItemButton onClick={() => showUserForm('login')}>
+        <ListItemButton onClick={() => isLoggedIn()}>
           <ListItem>
             <Icon>
               <LogoutIcon />

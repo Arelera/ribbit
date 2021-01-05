@@ -2,14 +2,14 @@ import CommentInput from './CommentInput';
 import CommentList from './CommentList';
 import Sorter from './Sorter';
 
-const Comments = ({ showUserForm }) => {
+const Comments = ({ isLoggedIn }) => {
   const currDate = new Date();
 
   return (
     <>
-      <CommentInput showUserForm={showUserForm} />
+      <CommentInput isLoggedIn={isLoggedIn} />
       <Sorter />
-      <CommentList showUserForm={showUserForm} currDate={currDate} />
+      <CommentList isLoggedIn={isLoggedIn} currDate={currDate} />
     </>
   );
 };

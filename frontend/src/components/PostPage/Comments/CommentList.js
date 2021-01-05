@@ -8,18 +8,14 @@ const Div = styled.div`
   padding: 0 16px 16px 0;
 `;
 
-const CommentList = ({ currDate, showUserForm }) => {
+const CommentList = ({ currDate, isLoggedIn }) => {
   const dispatch = useDispatch();
   const comments = useSelector((state) => state.comments);
 
   const voteHandler = (comment) => (isUpvote) => {
-    dispatch(voteOnComment(comment.id, isUpvote, comment.isUpvote)).then(
-      (res) => {
-        if (res === 'No user') {
-          showUserForm('login');
-        }
-      }
-    );
+    if (isLoggedIn()) {
+      dispatch(voteOnComment(comment.id, isUpvote, comment.isUpvote));
+    }
   };
 
   return (

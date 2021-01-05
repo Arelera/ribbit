@@ -54,19 +54,19 @@ const CloseBtn = styled.button`
   right: 20px;
 `;
 
-const UserForm = ({ showUserForm, userFormType, userFormRef }) => {
+const UserForm = ({ isLoggedIn, userFormType, userFormRef }) => {
   return (
     <Container>
       <Div ref={userFormRef}>
         <Decor />
         <FormBox>
           {userFormType === 'login' ? (
-            <Login showUserForm={showUserForm} />
+            <Login isLoggedIn={isLoggedIn} />
           ) : (
-            <Signup showUserForm={showUserForm} />
+            <Signup isLoggedIn={isLoggedIn} />
           )}
         </FormBox>
-        <CloseBtn onClick={() => showUserForm(false)}>
+        <CloseBtn onClick={() => isLoggedIn(false)}>
           <XIcon />
         </CloseBtn>
       </Div>
